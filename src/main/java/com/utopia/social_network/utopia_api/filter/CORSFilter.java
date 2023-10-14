@@ -4,9 +4,13 @@
  */
 package com.utopia.social_network.utopia_api.filter;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.*;
 import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
 /**

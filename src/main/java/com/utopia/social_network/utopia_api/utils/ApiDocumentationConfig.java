@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.utopia.social_network.utopia_api.middleware;
+package com.utopia.social_network.utopia_api.utils;
+
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -25,8 +26,8 @@ public class ApiDocumentationConfig {
                         .description("API development documentation")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("TriTai")
-                                .email("tritailk65@gmail.com")))
+                                .name("")
+                                .email("")))
                 .externalDocs(new ExternalDocumentation()
                         .description("Documentation")
                         .url(""));
