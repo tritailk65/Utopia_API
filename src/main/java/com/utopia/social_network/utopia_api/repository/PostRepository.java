@@ -23,6 +23,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long>{
     
 //    @Modifying
 //    @Query("update post p set p.title = ?1, p.content = ?2, p.status = ?3 where p.post_id = ?4")
-//    void updatePostById(String title, String content, String status, UUID postId);
+//    void updatePostById(String title, String content, String status, long postId);
 
 }
