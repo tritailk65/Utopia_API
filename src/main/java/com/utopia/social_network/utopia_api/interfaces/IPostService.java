@@ -4,10 +4,9 @@
  */
 package com.utopia.social_network.utopia_api.interfaces;
 
-import com.utopia.social_network.utopia_api.entity.PostEntity;
+import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.model.PostModel;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.lang.Nullable;
 
 
@@ -18,7 +17,7 @@ import org.springframework.lang.Nullable;
 
 public interface IPostService {
     
-    List<PostEntity> GetAllPost(@Nullable Long id);
+    List<Post> GetAllPost(@Nullable Long id);
     
     void CreatePost(PostModel post);
     

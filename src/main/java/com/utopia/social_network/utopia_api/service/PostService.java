@@ -5,13 +5,13 @@ package com.utopia.social_network.utopia_api.service;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-import com.sun.istack.Nullable;
-import com.utopia.social_network.utopia_api.entity.PostEntity;
+import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
 import com.utopia.social_network.utopia_api.model.PostModel;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 
 import org.springframework.stereotype.Service;
 
@@ -26,23 +26,23 @@ public class PostService implements IPostService{
     private PostRepository postRepo;
 
     @Override
-    public List<PostEntity> GetAllPost(@Nullable Long id) {
+    public List<Post> GetAllPost(@Nullable Long id) {
         if (id==null){
             return postRepo.findAll();
         } else if(id!=null) {
-            return postRepo.findPostByUserId(id);
+            return postRepo.findPostById(id);
         }
         return null;
     }
     
     @Override
     public void CreatePost(PostModel post) {
-        PostEntity pEntity = new PostEntity();
-        pEntity.setContent(post.getContent());
-        pEntity.setStatus(post.getStatus());
-        pEntity.setTitle(post.getTitle());
-        pEntity.setDatePublished(post.getDatePublished());
-        postRepo.save(pEntity);
+        Post pE = new Post();
+        pE.setContent(post.getContent());
+        pE.setStatus(post.getStatus());
+        pE.setTitle(post.getTitle());
+        pE.setDatePublished(post.getDatePublished());
+        postRepo.save(pE);
     }
 
     @Override
