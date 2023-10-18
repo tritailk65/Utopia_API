@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/Post")
+@RequestMapping("/api/Post")
 public class PostController {
     
     @Autowired
@@ -36,8 +36,13 @@ public class PostController {
     }
     
     @GetMapping(value = "/{id}")
-    private APIResult getPostByUserID(@PathVariable("id") Long id){
+    private APIResult getPostByPost(@PathVariable("id") Long id){
         return new APIResult(200,"Ok",null,postService.GetAllPost(id));
+    }
+    
+    @GetMapping(value = "/user={id}")
+    private APIResult getPostByUser(@PathVariable("id") Long id){
+        return new APIResult(200,"Ok",null,postService.GetAllPostByUser(id));
     }
     
     @PutMapping(value = "/{id}")
@@ -48,6 +53,6 @@ public class PostController {
     
     @DeleteMapping(value = "/{id}")
     private APIResult deletePostById(@PathVariable("id") Long id){
-        return rs.MessageSuccess("Xóa bài viết thành công", id);
+        return rs.MessageSuccess("Xóa bài viết thành công", null);
     }
 }
