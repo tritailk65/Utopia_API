@@ -19,6 +19,8 @@ public interface IPostService {
     
     List<Post> GetAllPost(@Nullable Long id);
     
+    List<Post> GetAllPostByUser (Long id);
+    
     void CreatePost(PostModel post);
     
     void DeletePostById(Long id);

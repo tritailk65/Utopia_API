@@ -47,6 +47,7 @@ public class Post{
     
     @Column
     private Date lastUpdate;
+
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserId", insertable = false, updatable = false)

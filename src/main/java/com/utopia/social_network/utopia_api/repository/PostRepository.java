@@ -7,18 +7,25 @@ package com.utopia.social_network.utopia_api.repository;
 import com.utopia.social_network.utopia_api.entity.Post;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author trita
  */
 @Repository
+@Transactional
 public interface PostRepository extends JpaRepository<Post, Long>{
     List<Post> findPostById (Long id);
     
-//    @Modifying
-//    @Query("update post p set p.title = ?1, p.content = ?2, p.status = ?3 where p.post_id = ?4")
-//    void updatePostById(String title, String content, String status, long postId);
+    List<Post> findPostByUserId (Long id);
+    
+    @Modifying
+    @Query(value =  "update post p set p.title = ? where p.id = ?", nativeQuery = true)
+    int updatePostSetTitleById(String title, Long id);
 
 }
