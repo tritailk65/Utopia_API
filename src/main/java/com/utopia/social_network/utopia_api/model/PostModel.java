@@ -14,8 +14,8 @@ import java.util.UUID;
  */
 
 public class PostModel {
-    public long post_Id;
-    public long user_Id;
+    public long id;
+    public long userId;
     public String title;
     public String content;
     public int isActive;
@@ -27,9 +27,9 @@ public class PostModel {
     public long likeCount;
     public Date lastUpdate;
 
-    public PostModel(long post_Id, long user_Id, String title, String content, int isActive, String status, Date datePublished, int isHideLike, int commentStat, long shareCount, long likeCount, Date lastUpdate) {
-        this.post_Id = post_Id;
-        this.user_Id = user_Id;
+    public PostModel(long id, long userId, String title, String content, int isActive, String status, Date datePublished, int isHideLike, int commentStat, long shareCount, long likeCount, Date lastUpdate) {
+        this.id = id;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.isActive = isActive;
@@ -40,18 +40,22 @@ public class PostModel {
         this.shareCount = shareCount;
         this.likeCount = likeCount;
         this.lastUpdate = lastUpdate;
+    }  
+
+    public long getId() {
+        return id;
     }
 
-    public long getPost_Id() {
-        return post_Id;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public long getUser_Id() {
-        return user_Id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser_Id(long user_Id) {
-        this.user_Id = user_Id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {

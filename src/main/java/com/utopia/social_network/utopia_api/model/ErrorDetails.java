@@ -4,27 +4,22 @@
  */
 package com.utopia.social_network.utopia_api.model;
 
+import org.springframework.web.context.request.WebRequest;
+
 /**
  *
  * @author trita
  */
 public class ErrorDetails {
-    private int status;
-    private String message;
+    private int Status;
+    private String Exception;
+    private String Message;
+    private Object Data;
 
-    public ErrorDetails(int status, String message) {
-        super();
-        this.status = status;
-        this.message = message;
+    public ErrorDetails(int Status, String Exception, String Message, Object Data) {
+        this.Status = Status;
+        this.Exception = Exception;
+        this.Message = Message;
+        this.Data = Data;
     }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-    
-    
 }
