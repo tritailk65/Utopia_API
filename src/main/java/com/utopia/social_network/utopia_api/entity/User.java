@@ -4,20 +4,17 @@
  */
 package com.utopia.social_network.utopia_api.entity;
 
+import java.util.Date;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 
 /**
  *
@@ -26,163 +23,158 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user")
 public class User {
-    
+
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long Id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column
+    private String userName;
+
+    @Column
+    private String password;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String email;
+
+    @Column
+    private String fullName;
+
+    @Column
+    private String gender;
+
+    @Column
+    private Date createAt;
+
+    @Column
+    private Date updateAt;
+
+    @Column
+    private String bio;
+
+    @Column
+    private String website;
     
     @Column
-    private String UserName;
-    
-    @Column
-    private String PassWord;
-    
-    @Column
-    private String Phone;
-    
-    @Column
-    private String Email;
-    
+    private String avatarPath;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Post> posts;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<PostLike> postLikes;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<PostFavorite> postFavorites;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<PostComment> postComments;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<Following> followings;
-    
+
     @OneToMany(mappedBy = "user")
     private Set<RequestFollow> requestFollows;
-    
-    @OneToOne(mappedBy = "user")
-    private UserProfile userProfile;
 
-    public User(long Id, String UserName, String PassWord, String Phone, String Email, Set<Post> posts, Set<PostLike> postLikes, Set<PostFavorite> postFavorites, Set<PostComment> postComments, Set<Notification> notifications, Set<Following> followings, Set<RequestFollow> requestFollows, UserProfile userProfile) {
-        this.Id = Id;
-        this.UserName = UserName;
-        this.PassWord = PassWord;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.posts = posts;
-        this.postLikes = postLikes;
-        this.postFavorites = postFavorites;
-        this.postComments = postComments;
-        this.notifications = notifications;
-        this.followings = followings;
-        this.requestFollows = requestFollows;
-        this.userProfile = userProfile;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public long getId() {
+        return id;
     }
 
-    public long getId() {
-        return Id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
-    }
-
-    public String getPassWord() {
-        return PassWord;
-    }
-
-    public void setPassWord(String PassWord) {
-        this.PassWord = PassWord;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
-    public void setPhone(String Phone) {
-        this.Phone = Phone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
-    public void setEmail(String Email) {
-        this.Email = Email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Set<Post> getPosts() {
-        return posts;
+    public String getAvatarPath() {
+        return avatarPath;
     }
 
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 
-    public Set<PostLike> getPostLikes() {
-        return postLikes;
-    }
-
-    public void setPostLikes(Set<PostLike> postLikes) {
-        this.postLikes = postLikes;
-    }
-
-    public Set<PostFavorite> getPostFavorites() {
-        return postFavorites;
-    }
-
-    public void setPostFavorites(Set<PostFavorite> postFavorites) {
-        this.postFavorites = postFavorites;
-    }
-
-    public Set<PostComment> getPostComments() {
-        return postComments;
-    }
-
-    public void setPostComments(Set<PostComment> postComments) {
-        this.postComments = postComments;
-    }
-
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
-    public Set<Following> getFollowings() {
-        return followings;
-    }
-
-    public void setFollowings(Set<Following> followings) {
-        this.followings = followings;
-    }
-
-    public Set<RequestFollow> getRequestFollows() {
-        return requestFollows;
-    }
-
-    public void setRequestFollows(Set<RequestFollow> requestFollows) {
-        this.requestFollows = requestFollows;
-    }
-
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
     
+    
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
     
 }

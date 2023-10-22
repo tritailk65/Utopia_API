@@ -38,15 +38,6 @@ public class PostLike {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
-    public PostLike(long Id, long postId, long userId, Date dateLike, Post post, User user) {
-        this.Id = Id;
-        this.postId = postId;
-        this.userId = userId;
-        this.dateLike = dateLike;
-        this.post = post;
-        this.user = user;
-    }
-
     public long getId() {
         return Id;
     }
@@ -73,23 +64,5 @@ public class PostLike {
 
     public void setDateLike(Date dateLike) {
         this.dateLike = dateLike;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-    
-    
+    }   
 }

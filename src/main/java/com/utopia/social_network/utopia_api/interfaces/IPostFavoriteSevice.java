@@ -4,23 +4,17 @@
  */
 package com.utopia.social_network.utopia_api.interfaces;
 
-import com.utopia.social_network.utopia_api.entity.Post;
+import com.utopia.social_network.utopia_api.entity.PostFavorite;
 import java.util.List;
-import org.springframework.lang.Nullable;
 
 /**
  *
  * @author trita
  */
-
-public interface IPostService{
+public interface IPostFavoriteSevice {
+    List<PostFavorite> getAllPostFavoriteByUserId(Long userId);
     
-    List<Post> GetAllPost(@Nullable Long id);
+    PostFavorite savePost(Long userId, Long postId);
     
-    List<Post> GetAllPostByUser (Long id);
-    
-    void CreatePost(Post post);
-    
-    void DeletePostById(Long id);
-    
+    //Cancle save post here
 }

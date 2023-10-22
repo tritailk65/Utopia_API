@@ -12,6 +12,7 @@ import java.util.Set;
  *
  * @author trita
  */
+
 @Entity
 @Table(name = "post")
 public class Post{
@@ -37,9 +38,6 @@ public class Post{
     private Date datePublished;
     
     @Column
-    private long photoId;
-    
-    @Column
     private long likeCount;
     
     @Column
@@ -48,13 +46,16 @@ public class Post{
     @Column
     private Date lastUpdate;
 
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserId", insertable = false, updatable = false)
     private User user;
     
-    @OneToOne(mappedBy = "post")
-    private Photo photo;
+    @ManyToMany
+    @JoinTable(
+            name = "post_image",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private Set<Image> postImages;
     
     @OneToMany(mappedBy = "post")
     private Set<PostLike> postLikes;
@@ -113,14 +114,6 @@ public class Post{
         this.datePublished = datePublished;
     }
 
-    public long getPhotoId() {
-        return photoId;
-    }
-
-    public void setPhotoId(long photoId) {
-        this.photoId = photoId;
-    }
-
     public long getLikeCount() {
         return likeCount;
     }
@@ -153,38 +146,4 @@ public class Post{
         this.user = user;
     }
 
-    public Photo getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
-    public Set<PostLike> getPostLikes() {
-        return postLikes;
-    }
-
-    public void setPostLikes(Set<PostLike> postLikes) {
-        this.postLikes = postLikes;
-    }
-
-    public Set<PostFavorite> getPostFavorites() {
-        return postFavorites;
-    }
-
-    public void setPostFavorites(Set<PostFavorite> postFavorites) {
-        this.postFavorites = postFavorites;
-    }
-
-    public Set<PostComment> getPostComments() {
-        return postComments;
-    }
-
-    public void setPostComments(Set<PostComment> postComments) {
-        this.postComments = postComments;
-    }
-
-    
-    
 }
