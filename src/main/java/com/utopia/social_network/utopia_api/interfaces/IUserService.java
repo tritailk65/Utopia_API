@@ -24,7 +24,7 @@ public interface IUserService {
     
     Boolean login(UserLoginModel uLogin);
 
-    void signUp(UserRegisterModel userRegisterModel);
+    User signUp(UserRegisterModel userRegisterModel);
     
     User editProfile(UserProfileModel uProfile, Long id);
 }

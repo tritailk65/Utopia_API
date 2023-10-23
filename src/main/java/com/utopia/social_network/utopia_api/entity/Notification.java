@@ -27,7 +27,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private long Id;
+    private long id;
     
     @Column
     private long userId;
@@ -47,16 +47,6 @@ public class Notification {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
-
-    public Notification(long Id, long userId, int isLikeNoti, int isCmtNoti, Date updateAt, int isActive, User user) {
-        this.Id = Id;
-        this.userId = userId;
-        this.isLikeNoti = isLikeNoti;
-        this.isCmtNoti = isCmtNoti;
-        this.updateAt = updateAt;
-        this.isActive = isActive;
-        this.user = user;
-    }
 
     public long getUserId() {
         return userId;

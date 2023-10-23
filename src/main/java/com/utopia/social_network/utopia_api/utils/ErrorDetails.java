@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.utopia.social_network.utopia_api.model;
+package com.utopia.social_network.utopia_api.utils;
 
 import org.springframework.web.context.request.WebRequest;
 
@@ -11,10 +11,10 @@ import org.springframework.web.context.request.WebRequest;
  * @author trita
  */
 public class ErrorDetails {
-    private int Status;
-    private String Exception;
-    private String Message;
-    private Object Data;
+    public int Status;
+    public String Exception;
+    public String Message;
+    public Object Data;
 
     public ErrorDetails(int Status, String Exception, String Message, Object Data) {
         this.Status = Status;

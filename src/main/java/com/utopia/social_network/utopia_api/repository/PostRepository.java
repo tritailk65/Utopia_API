@@ -20,12 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface PostRepository extends JpaRepository<Post, Long>{
-    List<Post> findPostById (Long id);
-    
-    List<Post> findPostByUserId (Long id);
-    
+
     @Modifying
-    @Query(value =  "update post p set p.title = ? where p.id = ?", nativeQuery = true)
-    int updatePostSetTitleById(String title, Long id);
+    @Query(value =  "update post p set p.is_active = 0 where p.id = ?", nativeQuery = true)
+    int updatePostSetIsActiveById(Long id);
+
+    List<Post> findAllByIsActive(int i);
+
+    List<Post> findAllByUserIdAndIsActive(Long id, int i);
+
+    List<Post> findAllByIdAndIsActive(Long id, int i);
 
 }

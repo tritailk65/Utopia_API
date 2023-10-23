@@ -39,4 +39,10 @@ public interface UserRepository extends JpaRepository<User, Long>{
                     + "u.gender = ?"
                     + " where u.id = ?", nativeQuery = true)
     void updateUserSetAvatarPathById(String fullname, String website, String bio, String gender, Long id);
+
+    public User findUserByUserName(String userName);
+
+    public User findUserByEmail(String email);
+
+    public User findUserByPhone(String phone);
 }

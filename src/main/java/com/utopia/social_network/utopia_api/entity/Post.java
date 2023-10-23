@@ -32,7 +32,7 @@ public class Post{
     private String content;
     
     @Column
-    private String status;
+    private int isActive;
     
     @Column
     private Date datePublished;
@@ -45,6 +45,12 @@ public class Post{
     
     @Column
     private Date lastUpdate;
+    
+    @Column
+    private int isHideLike;
+    
+    @Column
+    private int commentStat;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserId", insertable = false, updatable = false)
@@ -98,20 +104,12 @@ public class Post{
         this.content = content;
     }
 
-    public String getStatus() {
-        return status;
+    public int getIsActive() {
+        return isActive;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getDatePublished() {
-        return datePublished;
-    }
-
-    public void setDatePublished(Date datePublished) {
-        this.datePublished = datePublished;
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 
     public long getLikeCount() {
@@ -138,12 +136,30 @@ public class Post{
         this.lastUpdate = lastUpdate;
     }
 
-    public User getUser() {
-        return user;
+    public int getIsHideLike() {
+        return isHideLike;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setIsHideLike(int isHideLike) {
+        this.isHideLike = isHideLike;
     }
 
+    public int getCommentStat() {
+        return commentStat;
+    }
+
+    public void setCommentStat(int commentStat) {
+        this.commentStat = commentStat;
+    }
+
+    public Date getDatePublished() {
+        return datePublished;
+    }
+
+    public void setDatePublished(Date datePublished) {
+        this.datePublished = datePublished;
+    }
+
+    
+    
 }

@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.entity;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class PostComment {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column
-    private long Id;
+    private long id;
     
     @Column
     private int parentId;
@@ -55,16 +56,8 @@ public class PostComment {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
-    public PostComment(long Id, int parentId, int itemId, long userId, long postId, String comment, Date dateComment, Post post, User user) {
-        this.Id = Id;
-        this.parentId = parentId;
-        this.itemId = itemId;
-        this.userId = userId;
-        this.postId = postId;
-        this.comment = comment;
-        this.dateComment = dateComment;
-        this.post = post;
-        this.user = user;
+    public long getId() {
+        return id;
     }
 
     public int getParentId() {
@@ -83,22 +76,6 @@ public class PostComment {
         this.itemId = itemId;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(long postId) {
-        this.postId = postId;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -115,21 +92,5 @@ public class PostComment {
         this.dateComment = dateComment;
     }
 
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-    
     
 }
