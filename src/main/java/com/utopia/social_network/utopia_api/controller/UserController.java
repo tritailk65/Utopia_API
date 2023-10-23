@@ -13,9 +13,7 @@ import com.utopia.social_network.utopia_api.model.UserRegisterModel;
 import com.utopia.social_network.utopia_api.service.FileStorageService;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import java.io.IOException;
-import java.text.ParseException;
 import javax.servlet.http.HttpServletRequest;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +49,12 @@ public class UserController {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/downloadFile/")
+                //                .path("/downloadFile/")
                 .path(fileName)
                 .toUriString();
 
         String rs = fileName + fileDownloadUri + file.getContentType() + file.getSize();
-        
+
         userService.updateUserAvatarPath(fileName, id);
 
         return new APIResult(200, "Ok", null, null);
@@ -64,12 +62,12 @@ public class UserController {
 
     @GetMapping(value = "/Avatar/{id}")
     private ResponseEntity<Resource> getAvatar(@PathVariable("id") Long id, HttpServletRequest request) {
-        
+
         User u = new User();
         u = userService.getUserById(id);
-                
+
         String fileName = u.getAvatarPath();
-        
+
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
@@ -108,20 +106,19 @@ public class UserController {
     private APIResult userLogin(@RequestBody UserLoginModel uLogin) {
         if (userService.login(uLogin)) {
             return new APIResult(200, "Đăng nhập thành công !", null, null);
-        } else{ 
-            throw new ResourceNotFoundException();
-        }
+        } else {
+            throw new ResourceNotFoundException("Đăng nhập không thành công !");
+        }     
     }
 
     @PostMapping(value = "/SignUp")
-    private APIResult userRegister(@RequestBody UserRegisterModel u) throws ParseException {
-        userService.signUp(u);
-        return rs.MessageSuccess("Đăng ký tài khoản thành công !", null);
+    private APIResult userRegister(@RequestBody UserRegisterModel u){
+        return new APIResult(200, "Ok", null, userService.signUp(u));
     }
-    
+
     @PutMapping(value = {"/EditProfile/{id}"})
-    private APIResult editProfile(@RequestBody UserProfileModel uProfile, @PathVariable("id") Long id){
-        return new APIResult(200, "Ok", null, userService.editProfile(uProfile,id));
+    private APIResult editProfile(@RequestBody UserProfileModel uProfile, @PathVariable("id") Long id) {
+        return new APIResult(200, "Ok", null, userService.editProfile(uProfile, id));
     }
 
 }

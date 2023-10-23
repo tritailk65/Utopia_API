@@ -7,7 +7,7 @@ import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
-import com.utopia.social_network.utopia_api.model.PostModel;
+import com.utopia.social_network.utopia_api.model.CreatePostModel;
 import java.text.ParseException;
 import java.util.List;
 import org.modelmapper.ModelMapper;
@@ -38,7 +38,7 @@ public class PostController {
     private APIResult rs;
     
     @PostMapping
-    private APIResult createdNewPost(@RequestBody PostModel postModel) throws ParseException{
+    private APIResult createdNewPost(@RequestBody CreatePostModel postModel) throws ParseException{
         Post post = convertToEntity(postModel);
         postService.CreatePost(post);
         return rs.MessageSuccess("Tạo mới bài viết thành công !", null);
@@ -51,24 +51,17 @@ public class PostController {
     
     @GetMapping(value = "/{id}")
     private APIResult getPostByPost(@PathVariable("id") Long id){
-        List<Post> checkIfNull = postService.GetAllPost(id);
-        if (checkIfNull == null){
-            throw new ResourceNotFoundException();
-        }
-        return new APIResult(200,"Ok",null,checkIfNull);
+        return new APIResult(200,"Ok",null,postService.GetAllPost(id));
     }
     
-    @GetMapping(value = "/user={id}")
+    @GetMapping(value = "/User/{id}")
     private APIResult getPostByUser(@PathVariable("id") Long id){
-        List<Post> checkIfNull = postService.GetAllPostByUser(id);
-        if (checkIfNull.size() == 0){
-            throw new ResourceNotFoundException();
-        }
-        return new APIResult(200,"Ok",null,checkIfNull);
+        return new APIResult(200,"Ok",null,postService.GetAllPostByUser(id));
     }
     
     @DeleteMapping(value = "/{id}")
     private APIResult deletePostById(@PathVariable("id") Long id){
+        //Trick for low code
         List<Post> checkIfNull = postService.GetAllPost(id);
         if (checkIfNull == null){
             throw new ResourceNotFoundException();
@@ -78,7 +71,7 @@ public class PostController {
         return rs.MessageSuccess("Xóa bài viết thành công", null);
     }
     
-    private Post convertToEntity (PostModel pModel) throws ParseException {
+    private Post convertToEntity (CreatePostModel pModel) throws ParseException {
         Post post = modelMapper.map(pModel, Post.class);
         return post;
     }

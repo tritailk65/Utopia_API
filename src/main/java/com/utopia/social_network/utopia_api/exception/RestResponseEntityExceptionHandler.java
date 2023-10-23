@@ -1,6 +1,6 @@
 package com.utopia.social_network.utopia_api.exception;
 
-import com.utopia.social_network.utopia_api.model.ErrorDetails;
+import com.utopia.social_network.utopia_api.utils.ErrorDetails;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
@@ -28,13 +28,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  *
  * @author trita
  */
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
 
-//    public RestResponseEntityExceptionHandler() {
-//        super();
-//    }
+    public RestResponseEntityExceptionHandler() {
+        super();
+    }
 
     // API
     // 400
@@ -68,9 +67,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ErrorDetails error = new ErrorDetails(400, "BAD_REQUEST", ex.toString(), null);
         return handleExceptionInternal(ex, error, headers, HttpStatus.BAD_REQUEST, request);
     }
+    
+    // 400 - CUSTOM
+    @ExceptionHandler(value = {MyBadRequestException.class})
+    protected ResponseEntity<Object> handleMyBadRequestException(final RuntimeException ex, final WebRequest request) {
+        ErrorDetails error = new ErrorDetails(400, "BAD_REQUEST", ex.toString(), null);
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 
     // 404
-    @ExceptionHandler(value = {EntityNotFoundException.class, MyResourceNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class, ResourceNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(final RuntimeException ex, final WebRequest request) {
         ErrorDetails error = new ErrorDetails(404, "NOT_FOUND", ex.toString(), null);
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);

@@ -19,7 +19,7 @@ public class PostLike {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column
-    private long Id;
+    private long id;
     
     @Column
     private long postId;
@@ -39,9 +39,9 @@ public class PostLike {
     private User user;
 
     public long getId() {
-        return Id;
+        return id;
     }
-
+    
     public long getPostId() {
         return postId;
     }

@@ -55,18 +55,6 @@ public class RequestFollow {
     @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
     private User user;
 
-    public RequestFollow(Long id, long userSourceId, long userTargetId, Date requestDate, Date approveDate, Date deniedDate, Date terminationDate, int mutualFriend, User user) {
-        this.id = id;
-        this.userSourceId = userSourceId;
-        this.userTargetId = userTargetId;
-        this.requestDate = requestDate;
-        this.approveDate = approveDate;
-        this.deniedDate = deniedDate;
-        this.terminationDate = terminationDate;
-        this.mutualFriend = mutualFriend;
-        this.user = user;
-    }
-
     public Long getId() {
         return id;
     }

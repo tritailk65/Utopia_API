@@ -5,7 +5,7 @@
 package com.utopia.social_network.utopia_api.service;
 
 import com.utopia.social_network.utopia_api.exception.FileStorageException;
-import com.utopia.social_network.utopia_api.exception.MyResourceNotFoundException;
+import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.utils.FileStorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -68,10 +68,10 @@ public class FileStorageService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new MyResourceNotFoundException("File not found " + fileName);
+                throw new ResourceNotFoundException("File not found " + fileName);
             }
         } catch (MalformedURLException ex) {
-            throw new MyResourceNotFoundException("File not found " + fileName, ex);
+            throw new ResourceNotFoundException("File not found " + fileName, ex);
         }
     }
 }
