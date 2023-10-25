@@ -22,9 +22,11 @@ public interface IUserService {
     
     User getUserById(Long id);
     
-    Boolean login(UserLoginModel uLogin);
+    User login(UserLoginModel uLogin);
 
     User signUp(UserRegisterModel userRegisterModel);
     
     User editProfile(UserProfileModel uProfile, Long id);
+    
+    User findUserByUsernameOrEmailOrPhoneNumber(String u);   
 }

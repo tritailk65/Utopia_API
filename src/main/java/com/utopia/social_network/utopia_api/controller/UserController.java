@@ -23,6 +23,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.core.Authentication;
+
+
 
 /**
  *
@@ -37,6 +42,7 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+    
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -104,11 +110,12 @@ public class UserController {
 
     @GetMapping(value = {"/Login"})
     private APIResult userLogin(@RequestBody UserLoginModel uLogin) {
-        if (userService.login(uLogin)) {
-            return new APIResult(200, "Đăng nhập thành công !", null, null);
+        User loggedInUser = userService.login(uLogin);
+        if (loggedInUser != null) {
+            return new APIResult(200, "Đăng nhập thành công !", null, loggedInUser);
         } else {
             throw new ResourceNotFoundException("Đăng nhập không thành công !");
-        }     
+        }
     }
 
     @PostMapping(value = "/SignUp")
@@ -118,7 +125,26 @@ public class UserController {
 
     @PutMapping(value = {"/EditProfile/{id}"})
     private APIResult editProfile(@RequestBody UserProfileModel uProfile, @PathVariable("id") Long id) {
-        return new APIResult(200, "Ok", null, userService.editProfile(uProfile, id));
+        return new APIResult(200, "Ok", null,userService.editProfile(uProfile, id));
     }
+    
+    @PutMapping(value = {"/EditProfile/Image/{id}"})
+    private APIResult editProfileImage(@RequestBody String Path, @PathVariable("id") Long id) {
+        userService.updateUserAvatarPath(Path, id);
+        return new APIResult(200, "Ok", null,null);
+    }
+    
+    @PostMapping(value = "/forgot-password/{userName}")
+        public APIResult forgotPassword(@PathVariable("userName") String userName) {
+            User user = userService.findUserByUsernameOrEmailOrPhoneNumber(userName);
+            
+            if (user != null) {
+                String p = user.getPassword();
+                return new APIResult(200, "Tìm thấy User thành công !", null, p);
+            } else {
+                return new APIResult(401, "Không tìm thấy User !", null, null);
+            }
+        }
 
+    
 }

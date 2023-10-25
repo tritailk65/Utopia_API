@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     User findUserByUserNameAndPassword(String username, String password);
     
     User findUserByPhoneAndPassword (String phone, String password);
-
+    
     User findUserByEmailAndPassword (String email, String password);
     
     @Modifying
@@ -32,12 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     void updateUserSetAvatarPathById(String path, Long id);
     
     @Modifying
-    @Query(value =  "update user u "
-                    + "set u.full_name = ?, "
-                    + "u.website = ?, "
-                    + "u.bio = ?, "
-                    + "u.gender = ?"
-                    + " where u.id = ?", nativeQuery = true)
+    @Query(value =  "update user u set u.full_name = ? ,u.website = ?,u.bio = ?,u.gender = ? where u.id = ?", nativeQuery = true)
     void updateUserSetAvatarPathById(String fullname, String website, String bio, String gender, Long id);
 
     public User findUserByUserName(String userName);
@@ -45,4 +40,5 @@ public interface UserRepository extends JpaRepository<User, Long>{
     public User findUserByEmail(String email);
 
     public User findUserByPhone(String phone);
+    
 }

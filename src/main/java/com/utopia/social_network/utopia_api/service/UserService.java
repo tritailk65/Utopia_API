@@ -14,9 +14,12 @@ import com.utopia.social_network.utopia_api.model.UserRegisterModel;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -24,7 +27,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService implements IUserService {
-
+    
     @Autowired
     public UserRepository userRepo;
 
@@ -48,21 +51,71 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Boolean login(UserLoginModel uLogin) {
-        User u = new User();
-
-        if (uLogin.getPhone() != null) {
-            u = userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
+    public User login(UserLoginModel uLogin) {
+        if (uLogin.getEmail() != null) {
+            if (isEmail(uLogin.getEmail())) {
+                if (userRepo.findUserByEmail(uLogin.getEmail()) != null) {
+                    if (userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword()) != null) {
+                        return userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
+                    } else {
+                        throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
+                    }
+                } else {
+                    throw new MyBadRequestException("Email không tồn tại trong hệ thống");
+                }
+            }
+        } else if (uLogin.getPhone() != null) {
+            if (isPhone(uLogin.getPhone())) {
+                if (userRepo.findUserByPhone(uLogin.getPhone()) != null) {
+                    if (userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword()) != null) {
+                        return userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
+                    } else {
+                        throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
+                    }
+                } else {
+                    throw new MyBadRequestException("Số điện thoại không tồn tại trong hệ thống");
+                }
+            }
         } else if (uLogin.getUserName() != null) {
-            u = userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
-        } else if (uLogin.getEmail()!= null) {
-            u = userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
+            if (userRepo.findUserByUserName(uLogin.getUserName()) != null) {
+                if (userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword()) != null) {
+                    return userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
+                } else {
+                    throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
+                }
+            } else {
+                throw new MyBadRequestException("Username không tồn tại trong hệ thống");
+            }
         }
+        return null;
+    }
 
-        if (u != null) {
-            return true;
-        }
-        return false;
+    private boolean isEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isPhone(String phone) {
+        String regex = "^[0-9]{10}+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
+    }
+
+    @Override
+    public User findUserByUsernameOrEmailOrPhoneNumber(String u){
+    if(userRepo.findUserByEmail(u)!=null){
+    return userRepo.findUserByEmail(u);
+    }
+    if(userRepo.findUserByPhone(u)!=null){
+    return userRepo.findUserByPhone(u);
+    }
+    if(userRepo.findUserByUserName(u)!=null){
+    return userRepo.findUserByUserName(u);
+    }
+    return null;
     }
 
     @Override
@@ -98,7 +151,7 @@ public class UserService implements IUserService {
         //Khong can try-cath o day
         userRepo.updateUserSetAvatarPathById(path, id);
     }
-
+    
     @Override
     public User editProfile(UserProfileModel u, Long id) {
         User uCheck = userRepo.findUserById(id);
@@ -107,6 +160,7 @@ public class UserService implements IUserService {
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
         userRepo.updateUserSetAvatarPathById(u.getFullName(), u.getWebsite(), u.getBio(), u.getGender(), id);
+        userRepo.flush();
         return userRepo.findUserById(id);
     }
 
