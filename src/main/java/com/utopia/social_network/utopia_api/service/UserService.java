@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class UserService implements IUserService {
+    
     
     @Autowired
     public UserRepository userRepo;
@@ -142,14 +144,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUserAvatarPath(String path, Long id) {
+    public void updateUserAvatarPath(String fileName, Long id) {
         User u = userRepo.findUserById(id);
         
         if(u == null){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
         //Khong can try-cath o day
-        userRepo.updateUserSetAvatarPathById(path, id);
+        userRepo.updateUserSetAvatarPathById(fileName, id);
     }
     
     @Override

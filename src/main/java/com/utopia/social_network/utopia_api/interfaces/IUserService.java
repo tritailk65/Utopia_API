@@ -9,6 +9,7 @@ import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -18,7 +19,7 @@ public interface IUserService {
     
     List<User> getAllUser();
     
-    void updateUserAvatarPath(String path, Long id);  
+    void updateUserAvatarPath(String fileName, Long id);  
     
     User getUserById(Long id);
     

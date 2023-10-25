@@ -128,12 +128,6 @@ public class UserController {
         return new APIResult(200, "Ok", null,userService.editProfile(uProfile, id));
     }
     
-    @PutMapping(value = {"/EditProfile/Image/{id}"})
-    private APIResult editProfileImage(@RequestBody String Path, @PathVariable("id") Long id) {
-        userService.updateUserAvatarPath(Path, id);
-        return new APIResult(200, "Ok", null,null);
-    }
-    
     @PostMapping(value = "/forgot-password/{userName}")
         public APIResult forgotPassword(@PathVariable("userName") String userName) {
             User user = userService.findUserByUsernameOrEmailOrPhoneNumber(userName);
