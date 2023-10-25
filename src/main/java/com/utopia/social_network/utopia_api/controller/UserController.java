@@ -108,7 +108,7 @@ public class UserController {
         return new APIResult(200, "Ok", null, userService.getUserById(id));
     }
 
-    @GetMapping(value = {"/Login"})
+    @PostMapping(value = {"/Login"})
     private APIResult userLogin(@RequestBody UserLoginModel uLogin) {
         User loggedInUser = userService.login(uLogin);
         if (loggedInUser != null) {
