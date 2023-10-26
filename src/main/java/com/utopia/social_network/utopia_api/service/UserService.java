@@ -54,57 +54,14 @@ public class UserService implements IUserService {
 
     @Override
     public User login(UserLoginModel uLogin) {
-        if (uLogin.getEmail() != null) {
-            if (isEmail(uLogin.getEmail())) {
-                if (userRepo.findUserByEmail(uLogin.getEmail()) != null) {
-                    if (userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword()) != null) {
-                        return userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
-                    } else {
-                        throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
-                    }
-                } else {
-                    throw new MyBadRequestException("Email không tồn tại trong hệ thống");
-                }
-            }
-        } else if (uLogin.getPhone() != null) {
-            if (isPhone(uLogin.getPhone())) {
-                if (userRepo.findUserByPhone(uLogin.getPhone()) != null) {
-                    if (userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword()) != null) {
-                        return userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
-                    } else {
-                        throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
-                    }
-                } else {
-                    throw new MyBadRequestException("Số điện thoại không tồn tại trong hệ thống");
-                }
-            }
-        } else if (uLogin.getUserName() != null) {
-            if (userRepo.findUserByUserName(uLogin.getUserName()) != null) {
-                if (userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword()) != null) {
-                    return userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
-                } else {
-                    throw new MyBadRequestException("Sai mật khẩu, vui lòng kiểm tra lại");
-                }
-            } else {
-                throw new MyBadRequestException("Username không tồn tại trong hệ thống");
-            }
-        }
+        if(uLogin.getUserName() != null){
+        return userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
+        }else if(uLogin.getEmail() != null) return userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
+        else if(uLogin.getPhone() != null) return userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
         return null;
     }
+    
 
-    private boolean isEmail(String email) {
-        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    private boolean isPhone(String phone) {
-        String regex = "^[0-9]{10}+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
-    }
 
     @Override
     public User findUserByUsernameOrEmailOrPhoneNumber(String u){
