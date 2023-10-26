@@ -49,6 +49,11 @@ public class PostController {
         return new APIResult(200,"Ok",null,postService.GetAllPost(null));
     }
     
+    @GetMapping(value = "/getListPostForViewer")
+    private APIResult getListPostForViewer(){
+        return new APIResult(200,"Ok",null,postService.GetListPostForViewer(null));
+    }
+    
     @GetMapping(value = "/{id}")
     private APIResult getPostByPost(@PathVariable("id") Long id){
         return new APIResult(200,"Ok",null,postService.GetAllPost(id));

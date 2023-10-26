@@ -30,10 +30,10 @@ public class PostComment {
     @Column
     private long id;
     
-    @Column
+    @Column(nullable = true)
     private int parentId;
     
-    @Column
+    @Column(nullable = true)
     private int itemId;
     
     @Column
@@ -90,6 +90,38 @@ public class PostComment {
 
     public void setDateComment(Date dateComment) {
         this.dateComment = dateComment;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     

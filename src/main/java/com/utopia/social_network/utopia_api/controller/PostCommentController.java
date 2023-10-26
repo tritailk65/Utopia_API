@@ -44,4 +44,10 @@ public class PostCommentController {
         PostComment pC = commentService.userCommentPost(commentModel);      
         return new APIResult(200, "Ok", null, pC);
     }
+    
+    @PostMapping(value = {"/ReplyComment"}, produces = "application/json")
+    private APIResult ReplyComment(@RequestBody  PostCommentModel commentModel){
+        PostComment pC = commentService.userReplyComment(commentModel);      
+        return new APIResult(200, "Ok", null, pC);
+    }
 }
