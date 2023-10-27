@@ -17,4 +17,6 @@ public interface IPostCommentService {
     List<PostComment> getAllPostCommentById(Long id);
     
     PostComment userCommentPost(PostCommentModel commentModel);
+    
+    PostComment userReplyComment(PostCommentModel commentModel);
 }
