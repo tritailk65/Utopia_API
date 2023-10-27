@@ -14,10 +14,15 @@ import com.utopia.social_network.utopia_api.model.PostCommentModel;
 import com.utopia.social_network.utopia_api.repository.PostCommentRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
+import com.utopia.social_network.utopia_api.viewModel.CommentVM;
+import com.utopia.social_network.utopia_api.viewModel.ReplyCommentVM;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,8 +40,7 @@ public class PostCommentService implements IPostCommentService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PostRepository postRepository;
-    
+    private PostRepository postRepository;    
     @Autowired
     private ModelMapper modelMapper;
 
@@ -49,9 +53,66 @@ public class PostCommentService implements IPostCommentService {
         } else {
             return postComments;
         }
-
     }
+    
+    public List<CommentVM> getAllCommentByPostId(Long id) {
+        List<CommentVM> comments = new ArrayList<CommentVM>();
+        List<PostComment> data = commentRepository.findAllPostCommentByPostId(id);
 
+        if (data.isEmpty()) {
+            return comments;
+        }
+
+        Map<Long, CommentVM> commentMap = new HashMap<>(); // Sử dụng Map (Dictionary) để lưu trữ CommentVM theo id
+
+        for (PostComment p : data) {
+            if (p.getParentId() <= 0) {
+                CommentVM tmp = new CommentVM(p.getId(), p.getUserId(), p.getPostId(), p.getDateComment());
+                tmp.setComment(p.getComment());
+                tmp.setTotals(0);
+                
+                if(p.getUser() != null){
+                    tmp.getUser().setId(p.getUser().getId());
+                    tmp.getUser().setAvatarPath(p.getUser().getAvatarPath());
+                    tmp.getUser().setCreateAt(p.getUser().getCreateAt());
+                    tmp.getUser().setUserName(p.getUser().getUserName());
+                    tmp.getUser().setWebsite(p.getUser().getWebsite());
+                }
+                comments.add(tmp);
+
+                // Lưu CommentVM cha vào từ điển
+                commentMap.put(p.getId(), tmp);
+            }
+        }
+        
+        for (PostComment p : data) {
+            if (p.getParentId() > 0) {
+                long tmp_id = p.getParentId();
+                CommentVM parentComment = commentMap.get(tmp_id);
+                if (parentComment != null) {
+                    ReplyCommentVM reply = new ReplyCommentVM();
+                    reply.setId(p.getId());
+                    reply.setComment(p.getComment());
+                    reply.setDate(p.getDateComment());
+                    reply.setParentId(p.getParentId());
+                    reply.setPostId(p.getPostId());
+                    reply.setUserId(p.getUserId());
+                    if(p.getUser() != null ){
+                        reply.getUser().setId(p.getUser().getId());
+                        reply.getUser().setAvatarPath(p.getUser().getAvatarPath());
+                        reply.getUser().setCreateAt(p.getUser().getCreateAt());
+                        reply.getUser().setUserName(p.getUser().getUserName());
+                        reply.getUser().setWebsite(p.getUser().getWebsite());
+                    }
+                    parentComment.getReplies().add(reply);
+                    parentComment.setTotals(parentComment.getTotals() + 1);
+                }
+            }
+        }
+
+        return comments;
+    }
+    
     @Override
     public PostComment userCommentPost(PostCommentModel commentModel){
         try {
@@ -72,9 +133,8 @@ public class PostCommentService implements IPostCommentService {
             newComment.setUserId(user.getId());
             newComment.setPostId(post.getId());
             newComment.setComment(p.getComment());
-            // Chưa biết cách set null cho 2 trường này :((
-//            newComment.setParentId(null);
-//            newComment.setItemId(null);
+            newComment.setParentId(-1);
+            newComment.setItemId(-1);
             commentRepository.save(newComment);
             
             return p;
@@ -116,20 +176,12 @@ public class PostCommentService implements IPostCommentService {
             throw new MyBadRequestException(ex.toString());
         }
     }
-    
-    
-    
-    public boolean createNewComment(Post post){
-        try{
-            return true;
-        }
-        catch(Exception ex){
-            return false;
-        }
-    }
+  
 
     private PostComment convertToEntity(PostCommentModel commentModel) throws ParseException{
         PostComment postComment = modelMapper.map(commentModel, PostComment.class);
         return postComment;
     }
+
+    
 }

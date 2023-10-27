@@ -36,7 +36,7 @@ public class PostCommentController {
     
     @GetMapping(value = {"/Post/{id}"}, produces = "application/json")
     private APIResult getAllUser(@PathVariable("id") Long id) {        
-        return new APIResult(200, "Ok", null, commentService.getAllPostCommentById(id));
+        return new APIResult(200, "Ok", null, commentService.getAllCommentByPostId(id));
     }
     
     @PostMapping(value = {"/UserComment"}, produces = "application/json")

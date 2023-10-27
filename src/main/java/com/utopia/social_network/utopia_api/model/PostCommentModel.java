@@ -12,7 +12,6 @@ import org.springframework.lang.NonNull;
  * @author trita
  */
 public class PostCommentModel {
-
     @NonNull
     private long userId;
     @NonNull
@@ -61,3 +60,4 @@ public class PostCommentModel {
         this.parentId = parentId;
     }
 }
+
