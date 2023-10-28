@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.utopia.social_network.utopia_api.service;
 
 import com.utopia.social_network.utopia_api.entity.Post;
@@ -25,13 +21,8 @@ import java.util.List;
 import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author trita
- */
 @Service
 public class PostCommentService implements IPostCommentService {
 
@@ -54,6 +45,7 @@ public class PostCommentService implements IPostCommentService {
             return postComments;
         }
     }
+    
     
     public List<CommentVM> getAllCommentByPostId(Long id) {
         List<CommentVM> comments = new ArrayList<CommentVM>();
@@ -183,5 +175,44 @@ public class PostCommentService implements IPostCommentService {
         return postComment;
     }
 
-    
+    @Override
+    public boolean editComment(long commentId, long userId, String comment) {
+        try{
+            PostComment m_comment = commentRepository.findPostCommentByIdAndUserId(commentId, userId);
+            if(m_comment == null){
+                return false;
+            }
+            commentRepository.updateComment(comment, commentId);
+            return true;
+        }
+        catch(Exception ex){
+            System.out.println("Edit comment failed -> Exception: "+ex.getMessage());
+            throw new MyBadRequestException(ex.toString());
+        }
+    }
+
+    @Override
+    public boolean deleteComment(long commentId,long token) {
+        try{
+            PostComment m_comment = commentRepository.findPostCommentByIdAndUserId(commentId, token);
+            if(m_comment == null){
+                return false;
+            }
+            if(m_comment.getParentId() <= 0){
+                // Nếu comment là comment cha thì xóa tất cả replies
+                commentRepository.deleteComment(commentId);
+                commentRepository.deleteReplies(commentId);
+            }
+            else{
+                // Nếu comment là reply con thì chỉ xóa comment đó
+                commentRepository.deleteComment(commentId);
+            }
+            return true;
+        }
+        catch(Exception ex){
+            System.out.println("Delete comment failed -> Exception: "+ex.getMessage());
+            throw new MyBadRequestException(ex.toString());
+        }
+    }
+
 }

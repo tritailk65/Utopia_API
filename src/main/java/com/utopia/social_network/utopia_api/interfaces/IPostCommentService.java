@@ -22,4 +22,8 @@ public interface IPostCommentService {
     PostComment userCommentPost(PostCommentModel commentModel);
     
     PostComment userReplyComment(PostCommentModel commentModel);
+    
+    boolean editComment(long commentId , long userId , String comment);
+    
+    boolean deleteComment(long commentId, long token);
 }
