@@ -31,7 +31,7 @@ public class FollowController {
     @Autowired
     private IFollowService followService;
     @PostMapping(value = {"/SendRequest/{idTarget}"}, produces = "application/json")
-    private APIResult createdNewPost(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
+    private APIResult sendRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
 
         return rs.MessageSuccess("Tạo mới bài viết thành công !", followService.addRequestFollow(token,id));
     }
@@ -41,4 +41,4 @@ public class FollowController {
         return rs.MessageSuccess("Tạo mới bài viết thành công !", followService.addRequestFollow(token,id));
     }
 }
-}
+

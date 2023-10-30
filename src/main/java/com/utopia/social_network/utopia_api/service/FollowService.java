@@ -48,4 +48,26 @@ public class FollowService implements IFollowService{
             return false;
         }
     }
+    @Override
+    public boolean acceptRequestFollow(long user_src, long user_tar){
+        try{
+            User user1 = _userRepo.findUserById(user_src);
+            User user2 = _userRepo.findUserById(user_tar);
+            if(user1 == null || user2 == null) return false;
+            RequestFollow request = _requestRepo.findRequestFollowByUserSourceIdAndUserTargetId(user_src, user_tar);
+            if(request == null){
+                return false;
+            }
+            RequestFollow tmp = new RequestFollow();
+            Date currentTime = new Date();
+            tmp.setApproveDate(currentTime);
+            tmp.setUserSourceId(user_src);
+            tmp.setUserTargetId(user_tar);
+            _requestRepo.save(tmp);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
 }
