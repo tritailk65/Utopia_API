@@ -48,4 +48,9 @@ public class FollowService implements IFollowService{
             return false;
         }
     }
+
+    @Override
+    public boolean acceptRequestFollow(long user_src, long user_tar) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
