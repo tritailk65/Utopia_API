@@ -72,5 +72,5 @@ public class PostFavorite {
     public void setDateFavorite(Date DateFavorite) {
         this.DateFavorite = DateFavorite;
     }
-    
+
 }

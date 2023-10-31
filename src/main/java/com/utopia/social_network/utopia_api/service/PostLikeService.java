@@ -4,10 +4,17 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostLike;
+import com.utopia.social_network.utopia_api.entity.User;
+import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostLikeService;
 import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
+import com.utopia.social_network.utopia_api.repository.PostRepository;
+import com.utopia.social_network.utopia_api.repository.UserRepository;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +28,10 @@ public class PostLikeService implements IPostLikeService{
     
     @Autowired
     private PostLikeRepository repository;
+    @Autowired
+    private PostRepository postRepo;
+    @Autowired
+    private UserRepository userRepo;
     
     @Autowired
     private ModelMapper modelMapper;
@@ -35,6 +46,36 @@ public class PostLikeService implements IPostLikeService{
         postLike.setDateLike(dateLike);
         
         return repository.save(postLike);
+    }
+
+    @Override
+    public PostLike LikePost(Long userId, Long postId) {
+        Optional<User> user = userRepo.findById(userId);
+        if(user.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
+        }
+        Optional<Post> post = postRepo.findById(postId);
+        if(post.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+        }
+        Optional<PostLike> postLike = repository.findPostLikeByPostIdAndUserId(postId, userId);
+        if(postLike.isEmpty()){
+            PostLike newPostLike = savePost(userId,postId);
+            long likeCount = post.get().getLikeCount() + 1;
+            postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+            return newPostLike;
+        }
+        PostLike tmp = postLike.get();
+        repository.delete(tmp);
+        long likeCount = post.get().getLikeCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+        return tmp;
+    }
+
+    @Override
+    public List<PostLike> getAllPostLikeByUser(Long userId) {
+        List<PostLike> list = repository.findAllPostLikeByUserId(userId);
+        return list;
     }
     
     

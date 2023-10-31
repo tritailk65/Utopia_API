@@ -14,7 +14,7 @@ import java.util.List;
 public interface IPostFavoriteSevice {
     List<PostFavorite> getAllPostFavoriteByUserId(Long userId);
     
-    PostFavorite savePost(Long userId, Long postId);
-    
+    PostFavorite save(Long userId, Long postId);
+    PostFavorite saveFavoritePost(Long userId, Long postId);
     //Cancle save post here
 }

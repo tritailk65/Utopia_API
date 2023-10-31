@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.interfaces;
 
 import com.utopia.social_network.utopia_api.entity.PostLike;
+import java.util.List;
 
 /**
  *
@@ -12,5 +13,7 @@ import com.utopia.social_network.utopia_api.entity.PostLike;
  */
 
 public interface IPostLikeService {
+    List<PostLike> getAllPostLikeByUser(Long userId);
     PostLike savePost(Long userId, Long postId); 
+    PostLike LikePost(Long userId, Long postId); 
 }
