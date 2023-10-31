@@ -4,6 +4,9 @@
  */
 package com.utopia.social_network.utopia_api.interfaces;
 
+import com.utopia.social_network.utopia_api.entity.Following;
+import java.util.List;
+
 /**
  *
  * @author toica
@@ -11,5 +14,5 @@ package com.utopia.social_network.utopia_api.interfaces;
 public interface IFollowService {
     boolean addRequestFollow(long user_src, long user_tar);
     boolean acceptRequestFollow(long user_src, long user_tar);
-    
+    List<Following> getAllFollow(Long id);
 }
