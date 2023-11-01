@@ -12,6 +12,7 @@ import com.utopia.social_network.utopia_api.interfaces.IPostLikeService;
 import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
+import com.utopia.social_network.utopia_api.viewModel.SavePostLikeVM;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,9 @@ public class PostLikeService implements IPostLikeService{
     }
 
     @Override
-    public PostLike LikePost(Long userId, Long postId) {
+    public SavePostLikeVM LikePost(Long userId, Long postId) {
         Optional<User> user = userRepo.findById(userId);
+        SavePostLikeVM model = new SavePostLikeVM();
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
@@ -63,13 +65,22 @@ public class PostLikeService implements IPostLikeService{
             PostLike newPostLike = savePost(userId,postId);
             long likeCount = post.get().getLikeCount() + 1;
             postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
-            return newPostLike;
+            model.setId(newPostLike.getId());
+            model.setPostId(newPostLike.getPostId());
+            model.setUserId(newPostLike.getUserId());
+            model.setDateLike(newPostLike.getDateLike());
+            return model;
         }
         PostLike tmp = postLike.get();
         repository.delete(tmp);
         long likeCount = post.get().getLikeCount() - 1;
         postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
-        return tmp;
+        model.setId(tmp.getId());
+        model.setPostId(tmp.getPostId());
+        model.setUserId(tmp.getUserId());
+        model.setDateLike(tmp.getDateLike());
+        model.setAction("unliked");
+        return model;
     }
 
     @Override

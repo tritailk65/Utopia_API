@@ -12,6 +12,7 @@ import com.utopia.social_network.utopia_api.interfaces.IPostFavoriteSevice;
 import com.utopia.social_network.utopia_api.repository.PostFavoriteRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
+import com.utopia.social_network.utopia_api.viewModel.SavePostFavoriteVM;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -55,8 +56,9 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     }
     
     @Override
-    public PostFavorite saveFavoritePost(Long userId, Long postId) {
+    public SavePostFavoriteVM saveFavoritePost(Long userId, Long postId) {
         Optional<User> user = userRepo.findById(userId);
+        SavePostFavoriteVM model = new SavePostFavoriteVM();
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
@@ -69,13 +71,22 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
             PostFavorite newPostFavirote = save(userId,postId);
             long shareCount = post.get().getShareCount()+ 1;
             postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
-            return newPostFavirote;
+            model.setId(newPostFavirote.getId());
+            model.setPostId(newPostFavirote.getPostId());
+            model.setUserId(newPostFavirote.getUserId());
+            model.setDateFavorite(newPostFavirote.getDateFavorite());
+            return model;
         }
         PostFavorite tmp = postFavirote.get();
         repository.delete(tmp);
         long shareCount = post.get().getShareCount() - 1;
         postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
-        return tmp;
+        model.setId(tmp.getId());
+        model.setPostId(tmp.getPostId());
+        model.setUserId(tmp.getUserId());
+        model.setDateFavorite(tmp.getDateFavorite());
+        model.setAction("unsaved");
+        return model;
     }
     
     
