@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.interfaces;
 
 import com.utopia.social_network.utopia_api.entity.PostLike;
+import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.viewModel.SavePostLikeVM;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 
 public interface IPostLikeService {
-    List<PostLike> getAllPostLikeByUser(Long userId);
+    List<PostForViewerModel> getAllPostLikeByUser(Long userId);
     PostLike savePost(Long userId, Long postId); 
     SavePostLikeVM LikePost(Long userId, Long postId); 
 }

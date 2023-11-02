@@ -9,10 +9,12 @@ import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostLikeService;
+import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
 import com.utopia.social_network.utopia_api.viewModel.SavePostLikeVM;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -84,8 +86,33 @@ public class PostLikeService implements IPostLikeService{
     }
 
     @Override
-    public List<PostLike> getAllPostLikeByUser(Long userId) {
-        List<PostLike> list = repository.findAllPostLikeByUserId(userId);
+    public List<PostForViewerModel> getAllPostLikeByUser(Long userId) {
+        List<PostLike> likes = repository.findAllPostLikeByUserId(userId);
+        List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
+        for(PostLike x : likes){   
+            if(x.getPost().getIsActive() == 1){
+                PostForViewerModel tmp = new PostForViewerModel();
+            
+                tmp.setId(x.getPost().getId());
+                tmp.setContent(x.getPost().getContent());
+                tmp.setCommentStat(x.getPost().getCommentStat());
+                tmp.setDatePublished(x.getPost().getDatePublished());
+                tmp.setIsHideLike(x.getPost().getIsHideLike());
+                tmp.setLastUpdate(x.getPost().getLastUpdate());
+                tmp.setLikeCount(x.getPost().getLikeCount());
+                tmp.setShareCount(x.getPost().getShareCount());
+                tmp.setTitle(x.getPost().getTitle());
+
+                tmp.getUser().setId(x.getPost().getUser().getId());
+                tmp.getUser().setUserName(x.getPost().getUser().getUserName());
+                tmp.getUser().setCreateAt(x.getUser().getCreateAt());
+                tmp.getUser().setUpdateAt(x.getUser().getUpdateAt());
+                tmp.getUser().setAvatarPath(x.getUser().getAvatarPath());
+                tmp.getUser().setWebsite(x.getUser().getWebsite());
+
+                list.add(tmp);
+            }
+        }
         return list;
     }
     
