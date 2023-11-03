@@ -37,20 +37,21 @@ public class NotificationService implements INotificationService{
             List<NotificationModel> notificationModels = new ArrayList<NotificationModel>();
             
             Calendar cal = Calendar.getInstance();  
+            Date dateNow = new Date();
+            int month = dateNow.getMonth();
             Date date;
             
             if (when.contains("week")){
                 cal.add(Calendar.DAY_OF_YEAR, -7);  
                 date = cal.getTime();  
-                notiList = notiRepo.findAllNotificationByUser(id,date);
+                notiList = notiRepo.findAllNotificationByAmount(id, date,dateNow);
             } else if (when.contains("month")){
-                cal.add(Calendar.DAY_OF_YEAR, -31);  
+                cal.add(Calendar.DAY_OF_YEAR, -7);  
                 date = cal.getTime();  
-                notiList = notiRepo.findAllNotificationByUser(id,date);
+                notiList = notiRepo.findAllNotificationByMonthAndDate(id, month+1,date);
             } else if (when.contains("earlier")){
-                cal.add(Calendar.DAY_OF_YEAR, -62);  
                 date = cal.getTime();  
-                notiList = notiRepo.findAllNotificationByUser(id,date);
+                notiList = notiRepo.findAllNotificationByMonth(id, month);
             }
             
             if (!notiList.isEmpty()){

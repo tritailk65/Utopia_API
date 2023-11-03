@@ -10,7 +10,7 @@ package com.utopia.social_network.utopia_api.model;
  */
 public class UserLoginModel {
 
-    private String userName;
+    private String userName;   
     private String phone;
     private String email;
     private String password;

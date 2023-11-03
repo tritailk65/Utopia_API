@@ -22,7 +22,7 @@ public interface IUserService {
     
     User getUserById(Long id);
     
-    Boolean login(UserLoginModel uLogin);
+    User login(UserLoginModel uLogin);
 
     User signUp(UserRegisterModel userRegisterModel);
     

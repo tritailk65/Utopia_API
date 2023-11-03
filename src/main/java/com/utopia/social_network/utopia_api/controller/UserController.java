@@ -67,6 +67,10 @@ public class UserController {
         u = userService.getUserById(id);
 
         String fileName = u.getAvatarPath();
+        
+        if (fileName == null){
+            throw new ResourceNotFoundException("Không tìm thấy hình ảnh");
+        }
 
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -89,7 +93,6 @@ public class UserController {
                 // for download source image
                 //                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
-
     }
 
     @GetMapping
@@ -102,13 +105,9 @@ public class UserController {
         return new APIResult(200, "Ok", null, userService.getUserById(id));
     }
 
-    @GetMapping(value = {"/Login"})
+    @PostMapping(value = {"/Login"})
     private APIResult userLogin(@RequestBody UserLoginModel uLogin) {
-        if (userService.login(uLogin)) {
-            return new APIResult(200, "Đăng nhập thành công !", null, null);
-        } else {
-            throw new ResourceNotFoundException("Đăng nhập không thành công !");
-        }     
+        return new APIResult(200, "Đăng nhập thành công !", null, userService.login(uLogin)); 
     }
 
     @PostMapping(value = "/SignUp")
