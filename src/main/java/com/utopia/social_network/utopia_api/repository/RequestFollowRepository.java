@@ -25,4 +25,10 @@ public interface RequestFollowRepository extends JpaRepository<RequestFollow, Lo
     @Modifying
     @Query(value =  "update request_follow p set p.approve_date = ? where p.id = ?", nativeQuery = true)
     int updateFollowRequestSetApprovedateById(Date approve_date, long id);
+
+    RequestFollow findRequestFollowByUserTargetId(Long userSrc);
+    
+    RequestFollow findRequestFollowByUserSourceId(Long userSrc);
+
+    void deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
 }

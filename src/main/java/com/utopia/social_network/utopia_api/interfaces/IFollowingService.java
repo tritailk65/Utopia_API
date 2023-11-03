@@ -11,8 +11,9 @@ import java.util.List;
  *
  * @author toica
  */
-public interface IFollowService {
-    boolean addRequestFollow(long user_src, long user_tar);
-    boolean acceptRequestFollow(long user_src, long user_tar);
-    List<Following> getAllFollow(Long id);
+public interface IFollowingService {
+    
+    List<Following> getAllFollowingByUser(Long id);
+    
+    Boolean cancelFollow(Long userSrc, Long userTar);
 }

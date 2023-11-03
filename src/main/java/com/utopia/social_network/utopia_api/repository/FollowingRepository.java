@@ -19,9 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface FollowingRepository extends JpaRepository<Following, Long>{
-    @Override
-    public List<Following> findAll();
 
-    public List<Following> findAllById(Long id);
+    boolean findFollowingByUserTargetId(Long userTar);
+
+    boolean findFollowingByUserSourceId(Long userSrc);
+
+    void deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
+
+    List<Following> findAllByUserSourceId(Long id);
 
 }

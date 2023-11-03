@@ -43,13 +43,7 @@ public class RequestFollow {
     private Date approveDate;
     
     @Column
-    private Date deniedDate;
-    
-    @Column
-    private Date terminationDate;
-    
-    @Column
-    private int mutualFriend;
+    private int isPending;  //For check request in status waiting
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
@@ -91,29 +85,14 @@ public class RequestFollow {
         this.approveDate = approveDate;
     }
 
-    public Date getDeniedDate() {
-        return deniedDate;
+    public int getIsPending() {
+        return isPending;
     }
 
-    public void setDeniedDate(Date deniedDate) {
-        this.deniedDate = deniedDate;
+    public void setIsPending(int isPending) {
+        this.isPending = isPending;
     }
-
-    public Date getTerminationDate() {
-        return terminationDate;
-    }
-
-    public void setTerminationDate(Date terminationDate) {
-        this.terminationDate = terminationDate;
-    }
-
-    public int getMutualFriend() {
-        return mutualFriend;
-    }
-
-    public void setMutualFriend(int mutualFriend) {
-        this.mutualFriend = mutualFriend;
-    }
+    
 
     public User getUser() {
         return user;
