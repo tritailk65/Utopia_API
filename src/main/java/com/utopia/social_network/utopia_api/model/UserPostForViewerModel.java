@@ -12,11 +12,11 @@ import java.util.Date;
  */
 public class UserPostForViewerModel{
         private long id;
-        private String userName;
+        private String userName = "";
         private Date createAt;
         private Date updateAt;
-        private String avatarPath;
-        private String website;
+        private String avatarPath = "";
+        private String website = "";
 
         public UserPostForViewerModel() {
         }

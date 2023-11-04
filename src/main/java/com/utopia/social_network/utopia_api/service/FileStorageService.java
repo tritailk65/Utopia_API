@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import org.springframework.util.FileCopyUtils;
 
 /**
  *
@@ -70,6 +72,25 @@ public class FileStorageService {
             } else {
                 throw new ResourceNotFoundException("File not found " + fileName);
             }
+        } catch (MalformedURLException ex) {
+            throw new ResourceNotFoundException("File not found " + fileName, ex);
+        }
+    }
+    
+    public byte[] loadFileAsByteData(String fileName) {
+        try {
+        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists()) {
+            try (InputStream inputStream = resource.getInputStream()) {
+                return FileCopyUtils.copyToByteArray(inputStream);
+            } catch (IOException ex) {
+                throw new FileStorageException("Failed to read file " + fileName, ex);
+            }
+        } else {
+            throw new ResourceNotFoundException("File not found " + fileName);
+        }
         } catch (MalformedURLException ex) {
             throw new ResourceNotFoundException("File not found " + fileName, ex);
         }

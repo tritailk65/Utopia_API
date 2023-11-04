@@ -1,5 +1,6 @@
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostComment;
 import com.utopia.social_network.utopia_api.entity.User;
@@ -7,6 +8,7 @@ import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostCommentService;
 import com.utopia.social_network.utopia_api.model.PostCommentModel;
+import com.utopia.social_network.utopia_api.repository.NotificationRepository;
 import com.utopia.social_network.utopia_api.repository.PostCommentRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
@@ -32,6 +34,8 @@ public class PostCommentService implements IPostCommentService {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;    
+    @Autowired
+    private NotificationRepository notiRepository;    
     @Autowired
     private ModelMapper modelMapper;
 
@@ -129,6 +133,19 @@ public class PostCommentService implements IPostCommentService {
             newComment.setItemId(-1);
             commentRepository.save(newComment);
             
+            // User tự comment vào post của mình thì ko thông báo
+            if(user.getId() != post.getUserId()){
+                Notification noti = new Notification();
+                noti.setContext(user.getFullName()+" just commented on your post");
+                noti.setType("comment");
+                noti.setUpdateAt(dateNow);
+                noti.setUserId(post.getUserId());
+                noti.setSourceId(user.getId());
+
+                notiRepository.save(noti);
+            }
+            
+            
             return p;
         } catch (ParseException ex){
             throw new MyBadRequestException(ex.toString());
@@ -152,7 +169,8 @@ public class PostCommentService implements IPostCommentService {
                 return new PostComment();
             }
             User user = tmp_user.get(0);
-            Post post = tmp_post.get(0);      
+            Post post = tmp_post.get(0);   
+            PostComment parentCmt = tmp_comment.get(0);
             PostComment newComment = new PostComment();
             Date dateNow = new Date();
             newComment.setDateComment(dateNow);
@@ -162,6 +180,18 @@ public class PostCommentService implements IPostCommentService {
             newComment.setParentId(p.getParentId());
 
             commentRepository.save(newComment);
+            
+            // User tự replied comment thì ko thông báo
+            if(parentCmt.getUserId() != user.getId()){
+                Notification noti = new Notification();
+                noti.setContext(user.getFullName()+" just replied on your comment");
+                noti.setType("comment");
+                noti.setUpdateAt(dateNow);
+                noti.setUserId(parentCmt.getUserId());
+                noti.setSourceId(user.getId());
+
+                notiRepository.save(noti);
+            }
             
             return p;
         } catch (ParseException ex){
