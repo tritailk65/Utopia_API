@@ -77,6 +77,4 @@ public class Following {
     public void setUser(User user) {
         this.user = user;
     }
-
-    
 }

@@ -13,6 +13,7 @@ import com.utopia.social_network.utopia_api.repository.FollowingRepository;
 import com.utopia.social_network.utopia_api.repository.RequestFollowRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,8 @@ public class RequestFollowService implements IRequestFollowService{
             if(uRepo.findUserById(userTar) == null){
                 throw new ResourceNotFoundException("ID User target sai, kiểm tra lại");
             }
-            if(rqRepository.findRequestFollowByUserSourceIdAndUserTargetId(userSrc,userTar) != null){
+            if(rqRepository.findRequestFollowByUserSourceIdAndUserTargetId(userSrc,userTar) != null || 
+                    rqRepository.findRequestFollowByUserSourceIdAndUserTargetId(userTar,userSrc) != null){
                 throw new ResourceNotFoundException("Lời mời follow đã được gửi");
             }
 
@@ -56,6 +58,7 @@ public class RequestFollowService implements IRequestFollowService{
             rq.setRequestDate(currentTime);       
             rq.setUserSourceId(userSrc);
             rq.setUserTargetId(userTar);
+            rq.setIsPending(1);
             rqRepository.save(rq);
             return rq;
         }catch(Exception ex)
@@ -65,32 +68,34 @@ public class RequestFollowService implements IRequestFollowService{
     }
 
     @Override
-    public RequestFollow acceptRequestFollow(Long userSrc, Long userTar) {
-        RequestFollow rq = new RequestFollow();
+    public void acceptRequestFollow(Long userSrc, Long userTar) {
         Following fl = new Following();
-        
+        RequestFollow rq = new RequestFollow();
         try{
 //          #region: Check data
-            if(rqRepository.findRequestFollowByUserSourceId(userSrc) == null){
+            if(rqRepository.findByUserSourceId(userSrc) == null){
                 throw new ResourceNotFoundException("ID User source sai, kiểm tra lại");
             }
-            if(rqRepository.findRequestFollowByUserTargetId(userTar) == null){
+            if(rqRepository.findByUserTargetId(userTar) == null){
                 throw new ResourceNotFoundException("ID User target sai, kiểm tra lại");
+            }
+            
+            //Check request_follow have been accepted
+            rq = rqRepository.findRequestFollowByUserSourceIdAndUserTargetId(userSrc, userTar);
+            if(rq.getIsPending() == 0){
+                throw new MyBadRequestException("Lời mời follow đã được chấp nhận");
             }
 //          #endregion
 
             Date currentTime = new Date();
-            rq.setApproveDate(currentTime);       
-
-            rqRepository.save(rq);
+            rqRepository.updateFollowRequestSetAcceptFollow(currentTime, 0, userSrc, userTar);
             
             fl.setUserSourceId(userSrc);
             fl.setUserTargetId(userTar);
             fl.setDateFollow(currentTime);
             
             flRepo.save(fl);
-            
-            return rq;
+
         }catch(Exception ex)
         {
             throw new MyBadRequestException(ex.toString());
@@ -98,25 +103,37 @@ public class RequestFollowService implements IRequestFollowService{
     }
 
     @Override
-    public Boolean deleteRequestFollow(Long userSrc, Long userTar) { 
+    public void deleteRequestFollow(Long userSrc, Long userTar) { 
         try {
 //          #region: Check data
-            if(rqRepository.findRequestFollowByUserSourceId(userSrc) == null){
+            if(rqRepository.findByUserSourceId(userSrc) == null){
                 throw new ResourceNotFoundException("ID User source sai, kiểm tra lại");
             }
-            if(rqRepository.findRequestFollowByUserTargetId(userTar) == null){
+            if(rqRepository.findByUserTargetId(userTar) == null){
                 throw new ResourceNotFoundException("ID User target sai, kiểm tra lại");
             }
 //          #endregion
 
-            rqRepository.deleteByUserSourceIdAndUserTargetId(userSrc,userTar);
-            
-            return true;
+            int i = rqRepository.deleteByUserSourceIdAndUserTargetId(userSrc,userTar);
             
         } catch (Exception ex){
             throw new MyBadRequestException(ex.toString());
         }
     }
 
+    @Override
+    public List<RequestFollow> getAllRequestFollow(Long userTar) {       
+        try {
+            List<RequestFollow> rqs = rqRepository.findAllByUserTargetIdAndIsPending(userTar,1);
+           
+            if(uRepo.findUserById(userTar) == null){
+                throw new ResourceNotFoundException("Id user sai, kiểm tra lại");
+            }
+            
+            return rqs;
+        } catch (Exception ex){
+            throw new MyBadRequestException(ex.toString());
+        }
+    }
 
 }

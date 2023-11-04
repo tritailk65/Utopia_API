@@ -7,6 +7,7 @@ package com.utopia.social_network.utopia_api.repository;
 import com.utopia.social_network.utopia_api.entity.Following;
 import com.utopia.social_network.utopia_api.entity.RequestFollow;
 import java.util.Date;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,12 +24,16 @@ public interface RequestFollowRepository extends JpaRepository<RequestFollow, Lo
     RequestFollow findRequestFollowByUserSourceIdAndUserTargetId(Long usersrcid, Long usertarid);
     
     @Modifying
-    @Query(value =  "update request_follow p set p.approve_date = ? where p.id = ?", nativeQuery = true)
-    int updateFollowRequestSetApprovedateById(Date approve_date, long id);
+    @Query(value =  "update request_follow r "
+                    + "set r.approve_date = ? , r.is_pending = ? "
+                    + "where r.user_source_id = ? and r.user_target_id= ?", nativeQuery = true)
+    void updateFollowRequestSetAcceptFollow(Date approve_date, int isPending, long userSrc, long userTar);
 
-    RequestFollow findRequestFollowByUserTargetId(Long userSrc);
+    RequestFollow findByUserTargetId(Long userTar);
     
-    RequestFollow findRequestFollowByUserSourceId(Long userSrc);
+    RequestFollow findByUserSourceId(Long userSrc);
 
-    void deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
+    int deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
+
+    List<RequestFollow> findAllByUserTargetIdAndIsPending(Long userTar, int isPending);
 }

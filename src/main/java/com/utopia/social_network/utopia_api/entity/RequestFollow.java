@@ -52,7 +52,6 @@ public class RequestFollow {
     public Long getId() {
         return id;
     }
-
     public long getUserSourceId() {
         return userSourceId;
     }
@@ -92,15 +91,7 @@ public class RequestFollow {
     public void setIsPending(int isPending) {
         this.isPending = isPending;
     }
-    
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
     
     
 }

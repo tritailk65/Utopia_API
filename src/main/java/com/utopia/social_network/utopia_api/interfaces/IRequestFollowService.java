@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.interfaces;
 
 import com.utopia.social_network.utopia_api.entity.RequestFollow;
+import java.util.List;
 
 /**
  *
@@ -16,9 +17,11 @@ public interface IRequestFollowService {
     RequestFollow sendRequestFollow(Long userSrc, Long userTar);
     
     //Chấp nhập lời mời follow
-    RequestFollow acceptRequestFollow(Long userSrc, Long urerTar);
+    void acceptRequestFollow(Long userSrc, Long urerTar);
     
     //Hủy bỏ gửi lời mời follow
-    Boolean deleteRequestFollow(Long userSrc, Long urerTar);
+    void deleteRequestFollow(Long userSrc, Long urerTar);
+    
+    List<RequestFollow> getAllRequestFollow(Long userTar);
    
 }

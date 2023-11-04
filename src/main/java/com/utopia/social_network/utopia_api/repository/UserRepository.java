@@ -41,11 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long>{
                     + " where u.id = ?", nativeQuery = true)
     void updateUserSetAvatarPathById(String fullname, String website, String bio, String gender, Long id);
 
-    public User findUserByUserName(String userName);
+    User findUserByUserName(String userName);
 
-    public User findUserByEmail(String email);
+    User findUserByEmail(String email);
 
-    public User findUserByPhone(String phone);
+    User findUserByPhone(String phone);
     
     List<User> findAllById(Long id);
 }

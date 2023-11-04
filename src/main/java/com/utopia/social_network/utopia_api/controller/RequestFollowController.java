@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,32 +32,34 @@ public class RequestFollowController {
     private IRequestFollowService rqService;
     
     @Autowired
-    private APIResult rs;
+    private APIResult rs ;
+    
+    @GetMapping()
+    private APIResult getAllRequestFollowByUser(@RequestHeader("token") Long token){
+        return new APIResult(200, "Ok", null, rqService.getAllRequestFollow(token));
+    }
     
     @PostMapping(value = {"/SendRequestFollow/{idTarget}"})
     private APIResult sendRequest(@PathVariable("idTarget") Long id, @RequestHeader("token") Long token){
-        return rs.MessageSuccess("Gửi lời mời follow thành công !", rqService.sendRequestFollow(token,id));
+        return new APIResult(200, "Ok", null, rqService.sendRequestFollow(token,id));
     }
     
     @PostMapping(value = {"/AcceptRequestFollow/{idTarget}"})
     private APIResult acceptRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", rqService.acceptRequestFollow(token,id));
+        rqService.acceptRequestFollow(id, token);
+        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
     }
     
     @PutMapping(value = {"/CancelRequestFollow/{idTarget}"})
     private APIResult cancelRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        if (rqService.deleteRequestFollow(id, token)){
-            rs.MessageSuccess("Hủy lời mời follow thành công !", null);
-        } 
-        return rs;       
+        rqService.deleteRequestFollow(token, id);
+        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
     }
     
     @PutMapping(value = {"/DeleteRequestFollow/{idTarget}"})
     private APIResult deleteRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        if (rqService.deleteRequestFollow(id, token)){
-            rs.MessageSuccess("Xóa lời mời follow thành công !", null);
-        } 
-        return rs;
+        rqService.deleteRequestFollow(id, token);
+        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
         
     }
 
