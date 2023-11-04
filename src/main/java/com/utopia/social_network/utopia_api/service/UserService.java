@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author trita
+ * @author trita dsadasdasdasdasdas
  */
 @Service
 public class UserService implements IUserService {
@@ -48,7 +48,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Boolean login(UserLoginModel uLogin) {
+    public User login(UserLoginModel uLogin) {
         User u = new User();
 
         if (uLogin.getPhone() != null) {
@@ -60,9 +60,11 @@ public class UserService implements IUserService {
         }
 
         if (u != null) {
-            return true;
+            return u;
+        } else {
+            throw new ResourceNotFoundException("Đăng nhập thất bại");
         }
-        return false;
+        
     }
 
     @Override

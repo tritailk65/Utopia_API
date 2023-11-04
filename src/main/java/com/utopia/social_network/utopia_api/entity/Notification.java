@@ -33,43 +33,27 @@ public class Notification {
     private long userId;
     
     @Column
-    private int isLikeNoti;
+    private long sourceId;
     
     @Column
-    private int isCmtNoti;
+    private String type;
+    
+    @Column
+    private String context;
     
     @Column
     private Date updateAt;
     
-    @Column
-    private int isActive;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
-
+    
     public long getUserId() {
         return userId;
     }
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public int getIsLikeNoti() {
-        return isLikeNoti;
-    }
-
-    public void setIsLikeNoti(int isLikeNoti) {
-        this.isLikeNoti = isLikeNoti;
-    }
-
-    public int getIsCmtNoti() {
-        return isCmtNoti;
-    }
-
-    public void setIsCmtNoti(int isCmtNoti) {
-        this.isCmtNoti = isCmtNoti;
     }
 
     public Date getUpdateAt() {
@@ -80,21 +64,28 @@ public class Notification {
         this.updateAt = updateAt;
     }
 
-    public int getIsActive() {
-        return isActive;
+    public long getSourceId() {
+        return sourceId;
     }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
+    public void setSourceId(long sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public User getUser() {
-        return user;
+    public String getType() {
+        return type;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setType(String type) {
+        this.type = type;
     }
-    
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
     
 }

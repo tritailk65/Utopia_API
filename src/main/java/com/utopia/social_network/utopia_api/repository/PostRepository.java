@@ -24,11 +24,23 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     @Modifying
     @Query(value =  "update post p set p.is_active = 0 where p.id = ?", nativeQuery = true)
     int updatePostSetIsActiveById(Long id);
+    
+     @Modifying
+    @Query(value =  "update post p set p.like_count = ? , p.share_count = ? where p.id = ?", nativeQuery = true)
+    int updatePostSetLikeAndShareById(long likeCount,long shareCount , long id);
 
+    List<Post> findAllById(Long id);
+    
     List<Post> findAllByIsActive(int i);
 
     List<Post> findAllByUserIdAndIsActive(Long id, int i);
 
     List<Post> findAllByIdAndIsActive(Long id, int i);
+    
+    @Query("SELECT p FROM Post p JOIN p.user u WHERE p.isActive = 1 ORDER BY p.datePublished DESC")
+    List<Post> findAllPostForViewer();
+    
+    Post findPostById(Long id);
+
 
 }

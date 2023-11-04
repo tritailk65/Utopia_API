@@ -4,11 +4,20 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
+import com.utopia.social_network.utopia_api.entity.User;
+import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostFavoriteSevice;
+import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.repository.PostFavoriteRepository;
+import com.utopia.social_network.utopia_api.repository.PostRepository;
+import com.utopia.social_network.utopia_api.repository.UserRepository;
+import com.utopia.social_network.utopia_api.viewModel.SavePostFavoriteVM;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,17 +32,46 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     
     @Autowired
     private PostFavoriteRepository repository;
-    
+    @Autowired
+    private PostRepository postRepo;
+    @Autowired
+    private UserRepository userRepo;
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
-    public List<PostFavorite> getAllPostFavoriteByUserId(Long userId) {
-        return repository.findAllPostFavoriteByUserId(userId);
+    public List<PostForViewerModel> getAllPostFavoriteByUserId(Long userId) {
+        List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
+        List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId);
+        for(PostFavorite x : favorites){   
+            if(x.getPost().getIsActive() == 1){
+                PostForViewerModel tmp = new PostForViewerModel();
+            
+                tmp.setId(x.getPost().getId());
+                tmp.setContent(x.getPost().getContent());
+                tmp.setCommentStat(x.getPost().getCommentStat());
+                tmp.setDatePublished(x.getPost().getDatePublished());
+                tmp.setIsHideLike(x.getPost().getIsHideLike());
+                tmp.setLastUpdate(x.getPost().getLastUpdate());
+                tmp.setLikeCount(x.getPost().getLikeCount());
+                tmp.setShareCount(x.getPost().getShareCount());
+                tmp.setTitle(x.getPost().getTitle());
+
+                tmp.getUser().setId(x.getPost().getUser().getId());
+                tmp.getUser().setUserName(x.getPost().getUser().getUserName());
+                tmp.getUser().setCreateAt(x.getUser().getCreateAt());
+                tmp.getUser().setUpdateAt(x.getUser().getUpdateAt());
+                tmp.getUser().setAvatarPath(x.getUser().getAvatarPath());
+                tmp.getUser().setWebsite(x.getUser().getWebsite());
+
+                list.add(tmp);
+            }
+        }
+        return list;
     }
 
     @Override
-    public PostFavorite savePost(Long userId, Long postId) {
+    public PostFavorite save(Long userId, Long postId) {
         PostFavorite pf = new PostFavorite();
         
         Date date = new Date();
@@ -43,6 +81,40 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
         pf.setDateFavorite(date);
         
         return repository.save(pf);
+    }
+    
+    @Override
+    public SavePostFavoriteVM saveFavoritePost(Long userId, Long postId) {
+        Optional<User> user = userRepo.findById(userId);
+        SavePostFavoriteVM model = new SavePostFavoriteVM();
+        if(user.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
+        }
+        Optional<Post> post = postRepo.findById(postId);
+        if(post.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+        }
+        Optional<PostFavorite> postFavirote = repository.findPostFavoriteByUserIdAndPostId(userId, postId);
+        if(postFavirote.isEmpty()){
+            PostFavorite newPostFavirote = save(userId,postId);
+            long shareCount = post.get().getShareCount()+ 1;
+            postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+            model.setId(newPostFavirote.getId());
+            model.setPostId(newPostFavirote.getPostId());
+            model.setUserId(newPostFavirote.getUserId());
+            model.setDateFavorite(newPostFavirote.getDateFavorite());
+            return model;
+        }
+        PostFavorite tmp = postFavirote.get();
+        repository.delete(tmp);
+        long shareCount = post.get().getShareCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+        model.setId(tmp.getId());
+        model.setPostId(tmp.getPostId());
+        model.setUserId(tmp.getUserId());
+        model.setDateFavorite(tmp.getDateFavorite());
+        model.setAction("unsaved");
+        return model;
     }
     
     

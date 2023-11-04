@@ -5,6 +5,8 @@
 package com.utopia.social_network.utopia_api.interfaces;
 
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
+import com.utopia.social_network.utopia_api.model.PostForViewerModel;
+import com.utopia.social_network.utopia_api.viewModel.SavePostFavoriteVM;
 import java.util.List;
 
 /**
@@ -12,9 +14,9 @@ import java.util.List;
  * @author trita
  */
 public interface IPostFavoriteSevice {
-    List<PostFavorite> getAllPostFavoriteByUserId(Long userId);
+    List<PostForViewerModel> getAllPostFavoriteByUserId(Long userId);
     
-    PostFavorite savePost(Long userId, Long postId);
-    
+    PostFavorite save(Long userId, Long postId);
+    SavePostFavoriteVM saveFavoritePost(Long userId, Long postId);
     //Cancle save post here
 }

@@ -4,8 +4,10 @@
  */
 package com.utopia.social_network.utopia_api.controller;
 
+import com.utopia.social_network.utopia_api.entity.PostFavorite;
 import com.utopia.social_network.utopia_api.interfaces.IPostFavoriteSevice;
 import com.utopia.social_network.utopia_api.utils.APIResult;
+import com.utopia.social_network.utopia_api.viewModel.SavePostFavoriteVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class PostFavoriteController {
 
     @PostMapping(value = {"/userid={userid}&postid={postid}"})
     private APIResult userSavePost(@PathVariable("userid") Long userid, @PathVariable("postid") Long postid) {
-        favoriteSevice.savePost(userid, postid);
-        return rs.MessageSuccess("Lưu bài viết thành công !", null);
+        SavePostFavoriteVM result =  favoriteSevice.saveFavoritePost(userid, postid);
+        return rs.MessageSuccess("Lưu bài viết thành công !", result);
     }
 }

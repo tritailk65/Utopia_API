@@ -37,11 +37,11 @@ public class PostFavorite {
     @Column
     private Date DateFavorite;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postId", insertable = false, updatable = false)
     private Post post;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
@@ -71,6 +71,22 @@ public class PostFavorite {
 
     public void setDateFavorite(Date DateFavorite) {
         this.DateFavorite = DateFavorite;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
     
 }

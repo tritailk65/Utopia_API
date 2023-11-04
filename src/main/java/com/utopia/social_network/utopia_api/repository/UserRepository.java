@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.repository;
 
 import com.utopia.social_network.utopia_api.entity.User;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,9 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long>{
                     + " where u.id = ?", nativeQuery = true)
     void updateUserSetAvatarPathById(String fullname, String website, String bio, String gender, Long id);
 
-    public User findUserByUserName(String userName);
+    User findUserByUserName(String userName);
 
-    public User findUserByEmail(String email);
+    User findUserByEmail(String email);
 
-    public User findUserByPhone(String phone);
+    User findUserByPhone(String phone);
+    
+    List<User> findAllById(Long id);
 }
