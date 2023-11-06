@@ -4,12 +4,14 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostLikeService;
 import com.utopia.social_network.utopia_api.model.PostForViewerModel;
+import com.utopia.social_network.utopia_api.repository.NotificationRepository;
 import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
@@ -35,6 +37,8 @@ public class PostLikeService implements IPostLikeService{
     private PostRepository postRepo;
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private NotificationRepository notiRepo;
     
     @Autowired
     private ModelMapper modelMapper;
@@ -71,6 +75,19 @@ public class PostLikeService implements IPostLikeService{
             model.setPostId(newPostLike.getPostId());
             model.setUserId(newPostLike.getUserId());
             model.setDateLike(newPostLike.getDateLike());
+            
+            if(user.get().getId() != post.get().getUserId()){
+                Date dateNow = new Date();
+                Notification noti = new Notification();
+                noti.setContext(user.get().getFullName()+" just liked your post");
+                noti.setType("like");
+                noti.setUpdateAt(dateNow);
+                noti.setUserId(post.get().getUserId());
+                noti.setSourceId(user.get().getId());
+
+                notiRepo.save(noti);
+            }
+            
             return model;
         }
         PostLike tmp = postLike.get();
