@@ -2,55 +2,49 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.utopia.social_network.utopia_api.entity;
+package com.utopia.social_network.utopia_api.model;
 
+import com.utopia.social_network.utopia_api.entity.User;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 /**
  *
  * @author trita
  */
+public class RequestFollowModel {
 
-@Entity
-@Table(name = "request_follow")
-public class RequestFollow {
-    
-    @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column
     private Long id;
-    
-    @Column
+
     private long userSourceId;
-    
-    @Column
+
     private long userTargetId;
-    
-    @Column
+
     private Date requestDate;
-    
-    @Column
+
     private Date approveDate;
-    
-    @Column
+
     private int isPending;  //For check request in status waiting
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
-    private User user;
+    private User userRequest;
+
+    public RequestFollowModel(Long id, long userSourceId, long userTargetId, Date requestDate, Date approveDate, int isPending, User userRequest) {
+        this.id = id;
+        this.userSourceId = userSourceId;
+        this.userTargetId = userTargetId;
+        this.requestDate = requestDate;
+        this.approveDate = approveDate;
+        this.isPending = isPending;
+        this.userRequest = userRequest;
+    }
 
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public long getUserSourceId() {
         return userSourceId;
     }
@@ -91,6 +85,13 @@ public class RequestFollow {
         this.isPending = isPending;
     }
 
+    public User getUserRequest() {
+        return userRequest;
+    }
+
+    public void setUserRequest(User userRequest) {
+        this.userRequest = userRequest;
+    }
     
     
 }

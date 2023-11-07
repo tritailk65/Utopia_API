@@ -110,16 +110,16 @@ public class PostCommentService implements IPostCommentService {
     }
     
     @Override
-    public PostComment userCommentPost(PostCommentModel commentModel){
+    public PostCommentModel userCommentPost(PostCommentModel commentModel){
         try {
             PostComment p = convertToEntity(commentModel);
             List<User> tmp_user = userRepository.findAllById(p.getUserId());
             if(tmp_user.isEmpty()){
-                return new PostComment();
+                throw new MyBadRequestException("ko tìm thấy user");
             }
             List<Post> tmp_post = postRepository.findAllById(p.getPostId());
             if(tmp_post.isEmpty()){
-                return new PostComment();
+                throw new MyBadRequestException("ko tìm thấy post");
             }
             User user = tmp_user.get(0);
             Post post = tmp_post.get(0);      
@@ -146,27 +146,27 @@ public class PostCommentService implements IPostCommentService {
             }
             
             
-            return p;
+            return commentModel;
         } catch (ParseException ex){
             throw new MyBadRequestException(ex.toString());
         }
     }
     
     @Override
-    public PostComment userReplyComment(PostCommentModel commentModel){
+    public PostCommentModel userReplyComment(PostCommentModel commentModel){
         try {
             PostComment p = convertToEntity(commentModel);
             List<User> tmp_user = userRepository.findAllById(p.getUserId());
             if(tmp_user.isEmpty()){
-                return new PostComment();
+                throw new MyBadRequestException("ko tìm thấy user");
             }
             List<Post> tmp_post = postRepository.findAllById(p.getPostId());
             if(tmp_post.isEmpty()){
-                return new PostComment();
+                throw new MyBadRequestException("ko tìm thấy post");
             }
             List<PostComment> tmp_comment = commentRepository.findAllPostCommentById((long)p.getParentId());
             if(tmp_comment.isEmpty()){
-                return new PostComment();
+                throw new MyBadRequestException("ko tìm thấy comment");
             }
             User user = tmp_user.get(0);
             Post post = tmp_post.get(0);   
@@ -193,7 +193,7 @@ public class PostCommentService implements IPostCommentService {
                 notiRepository.save(noti);
             }
             
-            return p;
+            return commentModel;
         } catch (ParseException ex){
             throw new MyBadRequestException(ex.toString());
         }

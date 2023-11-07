@@ -6,12 +6,15 @@ package com.utopia.social_network.utopia_api.service;
 
 import com.utopia.social_network.utopia_api.entity.Following;
 import com.utopia.social_network.utopia_api.entity.RequestFollow;
+import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IRequestFollowService;
+import com.utopia.social_network.utopia_api.model.RequestFollowModel;
 import com.utopia.social_network.utopia_api.repository.FollowingRepository;
 import com.utopia.social_network.utopia_api.repository.RequestFollowRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,15 +125,26 @@ public class RequestFollowService implements IRequestFollowService{
     }
 
     @Override
-    public List<RequestFollow> getAllRequestFollow(Long userTar) {       
-        try {
-            List<RequestFollow> rqs = rqRepository.findAllByUserTargetIdAndIsPending(userTar,1);
-           
+    public List<RequestFollowModel> getAllRequestFollow(Long userTar) {
+        List<RequestFollowModel> rs = new ArrayList<RequestFollowModel>();
+        
+        try {        
+            
             if(uRepo.findUserById(userTar) == null){
                 throw new ResourceNotFoundException("Id user sai, kiểm tra lại");
-            }
+            }           
             
-            return rqs;
+            List<RequestFollow> rqs = rqRepository.findByUserTargetIdAndIsPending(userTar,1);
+            
+            if (!rqs.isEmpty()){
+                for (RequestFollow rq : rqs) {
+                    RequestFollowModel rqModel = new RequestFollowModel(rq.getId(), rq.getUserSourceId(), rq.getUserTargetId(), rq.getRequestDate(), rq.getApproveDate(), rq.getIsPending(),uRepo.findUserById(rq.getUserTargetId()));
+                    rs.add(rqModel);
+                }
+            }
+
+            
+            return rs;
         } catch (Exception ex){
             throw new MyBadRequestException(ex.toString());
         }

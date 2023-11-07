@@ -19,9 +19,9 @@ public interface IPostCommentService {
     
     List<CommentVM> getAllCommentByPostId(Long id);
     
-    PostComment userCommentPost(PostCommentModel commentModel);
+    PostCommentModel userCommentPost(PostCommentModel commentModel);
     
-    PostComment userReplyComment(PostCommentModel commentModel);
+    PostCommentModel userReplyComment(PostCommentModel commentModel);
     
     boolean editComment(long commentId , long userId , String comment);
     

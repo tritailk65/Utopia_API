@@ -56,7 +56,6 @@ public class PostService implements IPostService {
     @Override
     public void CreatePost(Post post) {
         Date dateNow = new Date();
-        post.setId(new Date().getTime());
         post.setDatePublished(dateNow);
         post.setLastUpdate(dateNow);
         post.setIsActive(1);
