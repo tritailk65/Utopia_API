@@ -4,12 +4,14 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostFavoriteSevice;
 import com.utopia.social_network.utopia_api.model.PostForViewerModel;
+import com.utopia.social_network.utopia_api.repository.NotificationRepository;
 import com.utopia.social_network.utopia_api.repository.PostFavoriteRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
@@ -36,6 +38,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     private PostRepository postRepo;
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private NotificationRepository notiRepo;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -103,6 +107,19 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
             model.setPostId(newPostFavirote.getPostId());
             model.setUserId(newPostFavirote.getUserId());
             model.setDateFavorite(newPostFavirote.getDateFavorite());
+            
+            if(user.get().getId() != post.get().getUserId()){
+                Date dateNow = new Date();
+                Notification noti = new Notification();
+                noti.setContext(user.get().getFullName()+" just saved your post");
+                noti.setType("save");
+                noti.setUpdateAt(dateNow);
+                noti.setUserId(post.get().getUserId());
+                noti.setSourceId(user.get().getId());
+
+                notiRepo.save(noti);
+            }
+            
             return model;
         }
         PostFavorite tmp = postFavirote.get();

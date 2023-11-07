@@ -60,13 +60,10 @@ public class UserController {
         return new APIResult(200, "Ok", null, null);
     }
 
-    @GetMapping(value = "/Avatar/{id}")
-    private ResponseEntity<Resource> getAvatar(@PathVariable("id") Long id, HttpServletRequest request) {
+    @GetMapping(value = "/Avatar/{name}")
+    private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
 
-        User u = new User();
-        u = userService.getUserById(id);
-
-        String fileName = u.getAvatarPath();
+        String fileName = name;
         
         if (fileName == null){
             throw new ResourceNotFoundException("Không tìm thấy hình ảnh");
