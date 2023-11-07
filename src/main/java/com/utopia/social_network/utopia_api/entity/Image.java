@@ -36,4 +36,58 @@ public class Image {
     @ManyToMany(mappedBy = "postImages")
     private Set<Post> posts;
 
+    public Image(long Id, String name, String type, long size, Date dateUpdate, Set<Post> posts) {
+        this.Id = Id;
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.dateUpdate = dateUpdate;
+        this.posts = posts;
+    }
+
+    public Image() {
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long Id) {
+        this.Id = Id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public Date getDateUpdate() {
+        return dateUpdate;
+    }
+
+    public void setDateUpdate(Date dateUpdate) {
+        this.dateUpdate = dateUpdate;
+    }
+    
+    
+    
 }

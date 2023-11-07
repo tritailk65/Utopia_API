@@ -4,7 +4,10 @@
  */
 package com.utopia.social_network.utopia_api.model;
 
+import com.utopia.social_network.utopia_api.entity.Image;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PostForViewerModel{
         private Long id;
@@ -16,6 +19,7 @@ public class PostForViewerModel{
         private int commentStat = 0;
         private Date datePublished;
         private Date lastUpdate;
+        private List<Image> images = new ArrayList<Image>();
         private UserPostForViewerModel User = new UserPostForViewerModel();
         
         public PostForViewerModel() {
@@ -81,6 +85,14 @@ public class PostForViewerModel{
         }
         public void setUser(UserPostForViewerModel User) {
             this.User = User;
+        }
+
+        public List<Image> getImages() {
+            return images;
+        }
+
+        public void setImages(List<Image> images) {
+            this.images = images;
         }
         
     }

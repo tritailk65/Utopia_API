@@ -8,13 +8,18 @@ import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
 import com.utopia.social_network.utopia_api.model.CreatePostModel;
+import com.utopia.social_network.utopia_api.service.FileStorageService;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  *
@@ -35,6 +40,9 @@ public class PostController {
     private ModelMapper modelMapper;
     
     @Autowired
+    private FileStorageService fileStorageService;
+    
+    @Autowired
     private APIResult rs;
     
     @PostMapping
@@ -42,6 +50,24 @@ public class PostController {
         Post post = convertToEntity(postModel);
         postService.CreatePost(post);
         return rs.MessageSuccess("Tạo mới bài viết thành công !", null);
+    }
+    
+    @PostMapping(value = "/UploadImage/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    private APIResult uploadFile(@RequestPart(value = "avatar") List<MultipartFile> files, @PathVariable("id") Long id) {
+        List<String> lst = new ArrayList<String>();
+        for(MultipartFile file : files){
+            String fileName = fileStorageService.storeFile(file);
+
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    //                .path("/downloadFile/")
+                    .path(fileName)
+                    .toUriString();
+
+            String rs = fileName + fileDownloadUri + file.getContentType() + file.getSize();
+            lst.add(fileName);
+        }
+        postService.updatePostImage(lst, id);
+        return new APIResult(200, "Ok", null, null);
     }
     
     @GetMapping

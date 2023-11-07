@@ -53,6 +53,10 @@ public class PostCommentService implements IPostCommentService {
     
     public List<CommentVM> getAllCommentByPostId(Long id) {
         List<CommentVM> comments = new ArrayList<CommentVM>();
+        List<Post> pCheck = postRepository.findAllByIdAndIsActive(id, 1);
+        if(pCheck.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay! Kiem tra lai ID");
+        }
         List<PostComment> data = commentRepository.findAllPostCommentByPostId(id);
 
         if (data.isEmpty()) {
@@ -117,7 +121,7 @@ public class PostCommentService implements IPostCommentService {
             if(tmp_user.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy user");
             }
-            List<Post> tmp_post = postRepository.findAllById(p.getPostId());
+            List<Post> tmp_post = postRepository.findAllByIdAndIsActive(p.getPostId(),1);
             if(tmp_post.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy post");
             }
@@ -160,7 +164,7 @@ public class PostCommentService implements IPostCommentService {
             if(tmp_user.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy user");
             }
-            List<Post> tmp_post = postRepository.findAllById(p.getPostId());
+            List<Post> tmp_post = postRepository.findAllByIdAndIsActive(p.getPostId(),1);
             if(tmp_post.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy post");
             }

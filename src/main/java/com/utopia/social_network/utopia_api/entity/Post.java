@@ -168,6 +168,14 @@ public class Post{
         this.datePublished = datePublished;
     }
 
+    public Set<Image> getPostImages() {
+        return postImages;
+    }
+
+    public void setPostImages(Set<Image> postImages) {
+        this.postImages = postImages;
+    }
+
     
     
 }

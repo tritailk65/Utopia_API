@@ -26,4 +26,5 @@ public interface IPostService{
     
     void DeletePostById(Long id);
     
+    void updatePostImage( List<String> path, Long id);  
 }

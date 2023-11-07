@@ -62,27 +62,28 @@ public class PostLikeService implements IPostLikeService{
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
-        Optional<Post> post = postRepo.findById(postId);
-        if(post.isEmpty()){
+        List<Post> m_post = postRepo.findAllByIdAndIsActive(postId,1);
+        if(m_post.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
         }
         Optional<PostLike> postLike = repository.findPostLikeByPostIdAndUserId(postId, userId);
+        Post post = m_post.get(0);
         if(postLike.isEmpty()){
             PostLike newPostLike = savePost(userId,postId);
-            long likeCount = post.get().getLikeCount() + 1;
-            postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+            long likeCount = post.getLikeCount() + 1;
+            postRepo.updatePostSetLikeAndShareById(likeCount,post.getShareCount(), postId);
             model.setId(newPostLike.getId());
             model.setPostId(newPostLike.getPostId());
             model.setUserId(newPostLike.getUserId());
             model.setDateLike(newPostLike.getDateLike());
             
-            if(user.get().getId() != post.get().getUserId()){
+            if(user.get().getId() != post.getUserId()){
                 Date dateNow = new Date();
                 Notification noti = new Notification();
                 noti.setContext(user.get().getFullName()+" just liked your post");
                 noti.setType("like");
                 noti.setUpdateAt(dateNow);
-                noti.setUserId(post.get().getUserId());
+                noti.setUserId(post.getUserId());
                 noti.setSourceId(user.get().getId());
 
                 notiRepo.save(noti);
@@ -92,8 +93,8 @@ public class PostLikeService implements IPostLikeService{
         }
         PostLike tmp = postLike.get();
         repository.delete(tmp);
-        long likeCount = post.get().getLikeCount() - 1;
-        postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+        long likeCount = post.getLikeCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(likeCount,post.getShareCount(), postId);
         model.setId(tmp.getId());
         model.setPostId(tmp.getPostId());
         model.setUserId(tmp.getUserId());

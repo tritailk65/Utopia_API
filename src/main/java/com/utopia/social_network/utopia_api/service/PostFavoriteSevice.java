@@ -94,27 +94,28 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
-        Optional<Post> post = postRepo.findById(postId);
-        if(post.isEmpty()){
+        List<Post> list_post = postRepo.findAllByIdAndIsActive(postId,1);
+        if(list_post.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
         }
         Optional<PostFavorite> postFavirote = repository.findPostFavoriteByUserIdAndPostId(userId, postId);
+        Post post = list_post.get(0);
         if(postFavirote.isEmpty()){
             PostFavorite newPostFavirote = save(userId,postId);
-            long shareCount = post.get().getShareCount()+ 1;
-            postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+            long shareCount = post.getShareCount()+ 1;
+            postRepo.updatePostSetLikeAndShareById(post.getLikeCount(),shareCount, postId);
             model.setId(newPostFavirote.getId());
             model.setPostId(newPostFavirote.getPostId());
             model.setUserId(newPostFavirote.getUserId());
             model.setDateFavorite(newPostFavirote.getDateFavorite());
             
-            if(user.get().getId() != post.get().getUserId()){
+            if(user.get().getId() != post.getUserId()){
                 Date dateNow = new Date();
                 Notification noti = new Notification();
                 noti.setContext(user.get().getFullName()+" just saved your post");
                 noti.setType("save");
                 noti.setUpdateAt(dateNow);
-                noti.setUserId(post.get().getUserId());
+                noti.setUserId(post.getUserId());
                 noti.setSourceId(user.get().getId());
 
                 notiRepo.save(noti);
@@ -124,8 +125,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
         }
         PostFavorite tmp = postFavirote.get();
         repository.delete(tmp);
-        long shareCount = post.get().getShareCount() - 1;
-        postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+        long shareCount = post.getShareCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(post.getLikeCount(),shareCount, postId);
         model.setId(tmp.getId());
         model.setPostId(tmp.getPostId());
         model.setUserId(tmp.getUserId());
