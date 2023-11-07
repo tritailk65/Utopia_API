@@ -35,5 +35,5 @@ public interface RequestFollowRepository extends JpaRepository<RequestFollow, Lo
 
     int deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
 
-    List<RequestFollow> findAllByUserTargetIdAndIsPending(Long userTar, int isPending);
+    List<RequestFollow> findByUserTargetIdAndIsPending(Long userTar, int isPending);
 }

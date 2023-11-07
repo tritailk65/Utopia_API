@@ -52,7 +52,7 @@ public class Post{
     @Column
     private int commentStat;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserId", insertable = false, updatable = false)
     private User user;
     
@@ -74,10 +74,6 @@ public class Post{
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getUserId() {
