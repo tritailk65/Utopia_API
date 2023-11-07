@@ -4,6 +4,8 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.common.FilterSort;
+import com.utopia.social_network.utopia_api.entity.Image;
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostLike;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -105,7 +108,7 @@ public class PostLikeService implements IPostLikeService{
 
     @Override
     public List<PostForViewerModel> getAllPostLikeByUser(Long userId) {
-        List<PostLike> likes = repository.findAllPostLikeByUserId(userId);
+        List<PostLike> likes = repository.findAllPostLikeByUserId(userId,FilterSort.getDesc("dateLike"));
         List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
         for(PostLike x : likes){   
             if(x.getPost().getIsActive() == 1){
@@ -120,7 +123,13 @@ public class PostLikeService implements IPostLikeService{
                 tmp.setLikeCount(x.getPost().getLikeCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
-
+                
+                if(x.getPost().getPostImages().size() > 0){
+                    for(Image img : x.getPost().getPostImages()){
+                        tmp.getImages().add(img);
+                    }
+                }
+                
                 tmp.getUser().setId(x.getPost().getUser().getId());
                 tmp.getUser().setUserName(x.getPost().getUser().getUserName());
                 tmp.getUser().setCreateAt(x.getUser().getCreateAt());

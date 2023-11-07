@@ -4,6 +4,8 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.common.FilterSort;
+import com.utopia.social_network.utopia_api.entity.Image;
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
@@ -46,7 +48,7 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     @Override
     public List<PostForViewerModel> getAllPostFavoriteByUserId(Long userId) {
         List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
-        List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId);
+        List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId,FilterSort.getDesc("id"));
         for(PostFavorite x : favorites){   
             if(x.getPost().getIsActive() == 1){
                 PostForViewerModel tmp = new PostForViewerModel();
@@ -60,7 +62,13 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
                 tmp.setLikeCount(x.getPost().getLikeCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
-
+                
+                if(x.getPost().getPostImages().size() > 0){
+                    for(Image img : x.getPost().getPostImages()){
+                        tmp.getImages().add(img);
+                    }
+                }
+                
                 tmp.getUser().setId(x.getPost().getUser().getId());
                 tmp.getUser().setUserName(x.getPost().getUser().getUserName());
                 tmp.getUser().setCreateAt(x.getUser().getCreateAt());
