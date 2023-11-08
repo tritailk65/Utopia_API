@@ -24,8 +24,11 @@ public interface FollowingRepository extends JpaRepository<Following, Long>{
 
     boolean findFollowingByUserSourceId(Long userSrc);
 
-    void deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
+    int deleteByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
 
-    List<Following> findAllByUserSourceId(Long id);
+
+    Following findFollowingByUserSourceIdAndUserTargetId(Long userSrc, Long userTar);
+
+    List<Following> findAllByUserTargetId(Long id);
 
 }

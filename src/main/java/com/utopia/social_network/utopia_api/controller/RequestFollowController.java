@@ -34,33 +34,32 @@ public class RequestFollowController {
     @Autowired
     private APIResult rs ;
     
-    @GetMapping()
-    private APIResult getAllRequestFollowByUser(@RequestHeader("token") Long token){
-        return new APIResult(200, "Ok", null, rqService.getAllRequestFollow(token));
+    @GetMapping(value = {"/{id}"})
+    private APIResult getAllRequestFollowByUser(@PathVariable("id") Long id){
+        return new APIResult(200, "Ok", null, rqService.getAllRequestFollow(id));
     }
     
-    @PostMapping(value = {"/SendRequestFollow/{idTarget}"})
-    private APIResult sendRequest(@PathVariable("idTarget") Long id, @RequestHeader("token") Long token){
-        return new APIResult(200, "Ok", null, rqService.sendRequestFollow(token,id));
+    @PostMapping(value = {"/SendRequestFollow/UserSrc={idSrc}&UserTar={idTar}"})
+    private APIResult sendRequest(@PathVariable("idSrc") Long idSrc, @PathVariable("idTar") Long idTar){
+        return new APIResult(200, "Ok", null, rqService.sendRequestFollow(idSrc,idTar));
     }
     
-    @PostMapping(value = {"/AcceptRequestFollow/{idTarget}"})
-    private APIResult acceptRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        rqService.acceptRequestFollow(id, token);
+    @PostMapping(value = {"/AcceptRequestFollow/UserSrc={idSrc}&UserTar={idTar}"})
+    private APIResult acceptRequest(@PathVariable("idSrc") Long idSrc,@PathVariable("idTar") Long idTar){
+        rqService.acceptRequestFollow(idTar, idSrc);
         return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
     }
     
-    @PutMapping(value = {"/CancelRequestFollow/{idTarget}"})
-    private APIResult cancelRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        rqService.deleteRequestFollow(token, id);
-        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
+    @PutMapping(value = {"/DeleteRequestFollow/UserSrc={idSrc}&UserTar={idTar}"})
+    private APIResult deleteRequest(@PathVariable("idSrc") Long idSrc,@PathVariable("idTar") Long idTar){
+        rqService.deleteRequestFollow(idTar, idSrc);
+        return rs.MessageSuccess("Xóa mời follow thành công !", null);
     }
     
-    @PutMapping(value = {"/DeleteRequestFollow/{idTarget}"})
-    private APIResult deleteRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        rqService.deleteRequestFollow(id, token);
-        return rs.MessageSuccess("Chấp nhận lời mời follow thành công !", null);
-        
+    @PutMapping(value = {"/CancelRequestFollow/UserSrc={idSrc}&UserTar={idTar}"})
+    private APIResult cancelRequest(@PathVariable("idSrc") Long idSrc,@PathVariable("idTar") Long idTar){
+        rqService.deleteRequestFollow(idSrc, idTar);
+        return rs.MessageSuccess("Hủy bỏ lời mời follow thành công !", null);   
     }
 
 }

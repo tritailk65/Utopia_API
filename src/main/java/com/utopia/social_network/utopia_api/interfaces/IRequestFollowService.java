@@ -23,6 +23,6 @@ public interface IRequestFollowService {
     //Hủy bỏ gửi lời mời follow
     void deleteRequestFollow(Long userSrc, Long urerTar);
     
-    List<RequestFollowModel> getAllRequestFollow(Long userTar);
+    List<RequestFollow> getAllRequestFollow(Long userTar);
    
 }

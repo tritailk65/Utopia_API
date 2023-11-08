@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.utopia.social_network.utopia_api.interfaces.IFollowingService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+
 
 @CrossOrigin
 @RestController
@@ -30,17 +30,15 @@ public class FollowingController {
     @Autowired
     private IFollowingService followService;
     
-    @GetMapping(value = {"/GetListFollower"})
-    private APIResult getAllFollowerByUser(@RequestHeader("token") Long token){
-        return new APIResult(200,"Ok",null,followService.getAllFollowingByUser(token));
+    @GetMapping(value = {"/{id}"})
+    private APIResult getAllFollowerByUser(@PathVariable("id") Long id){
+        return new APIResult(200,"Ok",null,followService.getAllFollowingByUser(id));
     }
     
-    @PutMapping(value = {"/CancelFollow/{idTarget}"})
-    private APIResult deleteRequest(@PathVariable("idTarget") Long id,@RequestHeader("token") Long token){
-        if (followService.cancelFollow(id, token)){
-            rs.MessageSuccess("Hủy follow thành công !", null);
-        } 
-        return rs;
+    @PutMapping(value = {"/CancelFollow/UserSrc={idSrc}&UserTar={idTar}"})
+    private APIResult deleteRequest(@PathVariable("idSrc") Long idSrc,@PathVariable("idTar") Long UserTar){
+        followService.cancelFollow(idSrc, UserTar);
+        return rs.MessageSuccess("Hủy follow thành công !", null); 
     }
 }
 
