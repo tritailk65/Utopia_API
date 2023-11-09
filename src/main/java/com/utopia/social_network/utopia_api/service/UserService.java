@@ -86,7 +86,7 @@ public class UserService implements IUserService {
         Date date = new Date();
         user.setCreateAt(date);
         user.setUpdateAt(date);
-   
+        user.setAvatarPath("unknown.png");
         return userRepo.save(user);
     }
 

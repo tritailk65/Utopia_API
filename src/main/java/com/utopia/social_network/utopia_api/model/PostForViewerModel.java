@@ -15,6 +15,7 @@ public class PostForViewerModel{
         private String content = "";
         private long likeCount = 0;
         private long shareCount = 0;
+        private long commentCount = 0;
         private int isHideLike = 0;
         private int commentStat = 0;
         private boolean isLiked = false;
@@ -120,6 +121,14 @@ public class PostForViewerModel{
 
         public void setIsOwner(boolean isOwner) {
             this.isOwner = isOwner;
+        }
+
+        public long getCommentCount() {
+            return commentCount;
+        }
+
+        public void setCommentCount(long commentCount) {
+            this.commentCount = commentCount;
         }
         
     }

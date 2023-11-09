@@ -121,6 +121,7 @@ public class PostLikeService implements IPostLikeService{
                 tmp.setIsHideLike(x.getPost().getIsHideLike());
                 tmp.setLastUpdate(x.getPost().getLastUpdate());
                 tmp.setLikeCount(x.getPost().getLikeCount());
+                tmp.setCommentCount(x.getPost().getCommentCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
                 

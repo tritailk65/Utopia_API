@@ -76,6 +76,7 @@ public class PostService implements IPostService {
         post.setIsActive(1);
         post.setLikeCount(0);
         post.setShareCount(0);
+        post.setCommentCount(0);
         postRepo.save(post);
     }
 
@@ -103,7 +104,8 @@ public class PostService implements IPostService {
             tmp.setContent(x.getContent());
             tmp.setDatePublished(x.getDatePublished());
             tmp.setLastUpdate(x.getLastUpdate());
-            tmp.setIsHideLike(tmp.getIsHideLike());
+            tmp.setIsHideLike(x.getIsHideLike());
+            tmp.setCommentCount(x.getCommentCount());
             tmp.setCommentStat(x.getCommentStat());
             tmp.setLikeCount(x.getLikeCount());
             tmp.setShareCount(x.getShareCount());

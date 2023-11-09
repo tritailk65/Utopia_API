@@ -149,6 +149,8 @@ public class PostCommentService implements IPostCommentService {
                 notiRepository.save(noti);
             }
             
+            post.setCommentCount(post.getCommentCount()+1);
+            postRepository.save(post);
             
             return commentModel;
         } catch (ParseException ex){
@@ -197,6 +199,9 @@ public class PostCommentService implements IPostCommentService {
                 notiRepository.save(noti);
             }
             
+            post.setCommentCount(post.getCommentCount()+1);
+            postRepository.save(post);
+            
             return commentModel;
         } catch (ParseException ex){
             throw new MyBadRequestException(ex.toString());
@@ -229,17 +234,30 @@ public class PostCommentService implements IPostCommentService {
     public boolean deleteComment(long commentId,long token) {
         try{
             PostComment m_comment = commentRepository.findPostCommentByIdAndUserId(commentId, token);
+            Post m_post = postRepository.findPostById(m_comment.getPostId());
             if(m_comment == null){
                 return false;
             }
             if(m_comment.getParentId() <= 0){
                 // Nếu comment là comment cha thì xóa tất cả replies
+                List<PostComment> childs = commentRepository.findAllPostCommentByParentId((int)m_comment.getId());
+                if(childs.size() > 0){
+                    m_post.setCommentCount(m_post.getCommentCount() - childs.size() - 1);
+                }
+                else{
+                    m_post.setCommentCount(m_post.getCommentCount() - 1);
+                }
+                
+                postRepository.save(m_post);
                 commentRepository.deleteComment(commentId);
                 commentRepository.deleteReplies(commentId);
             }
             else{
                 // Nếu comment là reply con thì chỉ xóa comment đó
                 commentRepository.deleteComment(commentId);
+                
+                m_post.setCommentCount(m_post.getCommentCount() - 1);
+                postRepository.save(m_post);
             }
             return true;
         }
