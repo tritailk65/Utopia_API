@@ -18,7 +18,7 @@ public interface IPostService{
     
     List<Post> GetAllPost(@Nullable Long id);
     
-    List<PostForViewerModel> GetListPostForViewer(@Nullable Long id);
+    List<PostForViewerModel> GetListPostForViewer(Long id,int page);
     
     List<Post> GetAllPostByUser (Long id);
     

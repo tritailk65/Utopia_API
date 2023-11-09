@@ -37,8 +37,12 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
     List<Post> findAllByIdAndIsActive(Long id, int i);
     
-    @Query("SELECT p FROM Post p JOIN p.user u WHERE p.isActive = 1 ORDER BY p.datePublished DESC")
-    List<Post> findAllPostForViewer();
+    @Query(value =
+       "SELECT * FROM Post "
+     + "WHERE is_active = 1 ORDER BY date_published DESC "
+     + " LIMIT ? OFFSET ?"
+    ,nativeQuery = true)
+    List<Post> findAllPostForViewer(int take,int skip);
     
     Post findPostById(Long id);
 

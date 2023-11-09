@@ -17,6 +17,9 @@ public class PostForViewerModel{
         private long shareCount = 0;
         private int isHideLike = 0;
         private int commentStat = 0;
+        private boolean isLiked = false;
+        private boolean isSaved = false;
+        private boolean isOwner = false;
         private Date datePublished;
         private Date lastUpdate;
         private List<Image> images = new ArrayList<Image>();
@@ -93,6 +96,30 @@ public class PostForViewerModel{
 
         public void setImages(List<Image> images) {
             this.images = images;
+        }
+
+        public boolean isIsLiked() {
+            return isLiked;
+        }
+
+        public void setIsLiked(boolean isLiked) {
+            this.isLiked = isLiked;
+        }
+
+        public boolean isIsSaved() {
+            return isSaved;
+        }
+
+        public void setIsSaved(boolean isSaved) {
+            this.isSaved = isSaved;
+        }
+
+        public boolean isIsOwner() {
+            return isOwner;
+        }
+
+        public void setIsOwner(boolean isOwner) {
+            this.isOwner = isOwner;
         }
         
     }

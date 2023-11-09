@@ -75,9 +75,9 @@ public class PostController {
         return new APIResult(200,"Ok",null,postService.GetAllPost(null));
     }
     
-    @GetMapping(value = "/getListPostForViewer")
-    private APIResult getListPostForViewer(){
-        return new APIResult(200,"Ok",null,postService.GetListPostForViewer(null));
+    @GetMapping(value = "/getListPostForViewer/id={id}&page={page}")
+    private APIResult getListPostForViewer(@PathVariable("id") Long id,@PathVariable("page") int page){
+        return new APIResult(200,"Ok",null,postService.GetListPostForViewer(id,page));
     }
     
     @GetMapping(value = "/{id}")
