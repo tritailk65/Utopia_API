@@ -16,18 +16,18 @@ import org.springframework.web.multipart.MultipartFile;
  * @author trita
  */
 public interface IUserService {
-    
+
     List<User> getAllUser();
-    
-    void updateUserAvatarPath(String fileName, Long id);  
-    
+
+    void updateUserAvatarPath(String fileName, Long id);
+
     User getUserById(Long id);
-    
+
     User login(UserLoginModel uLogin);
 
     User signUp(UserRegisterModel userRegisterModel);
-    
+
     User editProfile(UserProfileModel uProfile, Long id);
-    
-    User findUserByUsernameOrEmailOrPhoneNumber(String u);   
+
+    List<User> getSuggestByUser(Long id);
 }

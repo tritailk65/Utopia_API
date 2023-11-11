@@ -84,9 +84,9 @@ public class UserService implements IUserService {
         if (userRepo.findUserByUserName(userRegisterModel.getUserName()) != null){
             throw new MyBadRequestException("UserName đã tồn tại");      
         } else {
-            if (userRegisterModel.getEmail() != null ? (userRepo.findUserByEmail(userRegisterModel.getEmail()) != null) : false ){
+            if ((userRegisterModel.getEmail() != null && userRegisterModel.getEmail() != "") ? (userRepo.findUserByEmail(userRegisterModel.getEmail()) != null) : false ){
                 throw new MyBadRequestException("Email đã tồn tại");
-            } else if (userRegisterModel.getPhone()!= null ? (userRepo.findUserByPhone(userRegisterModel.getPhone()) != null) : false ){
+            } else if ((userRegisterModel.getPhone()!= null && userRegisterModel.getPhone() != "") ? (userRepo.findUserByPhone(userRegisterModel.getPhone()) != null) : false ){
                 throw new MyBadRequestException("Số điện thoại đã tồn tại");
             }
         }
@@ -127,4 +127,11 @@ public class UserService implements IUserService {
         User user = modelMapper.map(u, User.class);
         return user;
     }
+
+    @Override
+    public List<User> getSuggestByUser(Long id) {
+        return null;
+    }
+    
+    
 }
