@@ -4,6 +4,8 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.common.FilterSort;
+import com.utopia.social_network.utopia_api.entity.Image;
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
@@ -46,7 +48,7 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     @Override
     public List<PostForViewerModel> getAllPostFavoriteByUserId(Long userId) {
         List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
-        List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId);
+        List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId,FilterSort.getDesc("id"));
         for(PostFavorite x : favorites){   
             if(x.getPost().getIsActive() == 1){
                 PostForViewerModel tmp = new PostForViewerModel();
@@ -58,9 +60,16 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
                 tmp.setIsHideLike(x.getPost().getIsHideLike());
                 tmp.setLastUpdate(x.getPost().getLastUpdate());
                 tmp.setLikeCount(x.getPost().getLikeCount());
+                tmp.setCommentCount(x.getPost().getCommentCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
-
+                
+                if(x.getPost().getPostImages().size() > 0){
+                    for(Image img : x.getPost().getPostImages()){
+                        tmp.getImages().add(img);
+                    }
+                }
+                
                 tmp.getUser().setId(x.getPost().getUser().getId());
                 tmp.getUser().setUserName(x.getPost().getUser().getUserName());
                 tmp.getUser().setCreateAt(x.getUser().getCreateAt());
@@ -94,27 +103,28 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
-        Optional<Post> post = postRepo.findById(postId);
-        if(post.isEmpty()){
+        List<Post> list_post = postRepo.findAllByIdAndIsActive(postId,1);
+        if(list_post.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
         }
         Optional<PostFavorite> postFavirote = repository.findPostFavoriteByUserIdAndPostId(userId, postId);
+        Post post = list_post.get(0);
         if(postFavirote.isEmpty()){
             PostFavorite newPostFavirote = save(userId,postId);
-            long shareCount = post.get().getShareCount()+ 1;
-            postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+            long shareCount = post.getShareCount()+ 1;
+            postRepo.updatePostSetLikeAndShareById(post.getLikeCount(),shareCount, postId);
             model.setId(newPostFavirote.getId());
             model.setPostId(newPostFavirote.getPostId());
             model.setUserId(newPostFavirote.getUserId());
             model.setDateFavorite(newPostFavirote.getDateFavorite());
             
-            if(user.get().getId() != post.get().getUserId()){
+            if(user.get().getId() != post.getUserId()){
                 Date dateNow = new Date();
                 Notification noti = new Notification();
                 noti.setContext(user.get().getFullName()+" just saved your post");
                 noti.setType("save");
                 noti.setUpdateAt(dateNow);
-                noti.setUserId(post.get().getUserId());
+                noti.setUserId(post.getUserId());
                 noti.setSourceId(user.get().getId());
 
                 notiRepo.save(noti);
@@ -124,8 +134,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
         }
         PostFavorite tmp = postFavirote.get();
         repository.delete(tmp);
-        long shareCount = post.get().getShareCount() - 1;
-        postRepo.updatePostSetLikeAndShareById(post.get().getLikeCount(),shareCount, postId);
+        long shareCount = post.getShareCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(post.getLikeCount(),shareCount, postId);
         model.setId(tmp.getId());
         model.setPostId(tmp.getPostId());
         model.setUserId(tmp.getUserId());

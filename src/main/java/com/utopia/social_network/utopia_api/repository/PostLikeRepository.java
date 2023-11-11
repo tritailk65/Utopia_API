@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Sort;
 /**
  *
  * @author trita
@@ -21,5 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostLikeRepository extends JpaRepository<PostLike, Long>{
     Optional<PostLike> findPostLikeByPostIdAndUserId(long postId, long userId);
     
-    List<PostLike> findAllPostLikeByUserId(Long id);
+    List<PostLike> findAllPostLikeByUserId(Long id,Sort sort );
+
 }

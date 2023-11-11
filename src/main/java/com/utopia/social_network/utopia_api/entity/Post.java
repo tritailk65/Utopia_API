@@ -38,10 +38,13 @@ public class Post{
     private Date datePublished;
     
     @Column
-    private long likeCount;
+    private long likeCount = 0;
     
     @Column
-    private long shareCount;
+    private long commentCount = 0;
+    
+    @Column
+    private long shareCount = 0;
     
     @Column
     private Date lastUpdate;
@@ -162,6 +165,22 @@ public class Post{
 
     public void setDatePublished(Date datePublished) {
         this.datePublished = datePublished;
+    }
+
+    public Set<Image> getPostImages() {
+        return postImages;
+    }
+
+    public void setPostImages(Set<Image> postImages) {
+        this.postImages = postImages;
+    }
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
     }
 
     
