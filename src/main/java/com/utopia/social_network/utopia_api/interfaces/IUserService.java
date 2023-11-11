@@ -27,4 +27,6 @@ public interface IUserService {
     User signUp(UserRegisterModel userRegisterModel);
     
     User editProfile(UserProfileModel uProfile, Long id);
+    
+    List<User> getSuggestByUser (Long id);
 }

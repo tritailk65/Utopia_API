@@ -45,7 +45,12 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        // Tạo tên mới bằng cách thêm thời gian vào phần tên gốc
+        long time = System.currentTimeMillis();
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        String fileName = originalFileName.replace(fileExtension, "-" + time + fileExtension);
 
         try {
             // Check if the file's name contains invalid characters

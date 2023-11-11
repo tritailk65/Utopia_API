@@ -37,11 +37,10 @@ public class Following {
     @Column
     private Date dateFollow;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
     private User user;
 
-    
     public long getId() {
         return id;
     }

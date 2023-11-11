@@ -81,9 +81,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Following> followings;
-
-    @OneToMany(mappedBy = "user")
-    private Set<RequestFollow> requestFollows;
+    
+//    @OneToMany(mappedBy = "user")
+//    private Set<RequestFollow> requestFollows;
 
     public void setPassword(String password) {
         this.password = password;

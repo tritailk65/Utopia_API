@@ -4,7 +4,10 @@
  */
 package com.utopia.social_network.utopia_api.model;
 
+import com.utopia.social_network.utopia_api.entity.Image;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PostForViewerModel{
         private Long id;
@@ -12,10 +15,15 @@ public class PostForViewerModel{
         private String content = "";
         private long likeCount = 0;
         private long shareCount = 0;
+        private long commentCount = 0;
         private int isHideLike = 0;
         private int commentStat = 0;
+        private boolean isLiked = false;
+        private boolean isSaved = false;
+        private boolean isOwner = false;
         private Date datePublished;
         private Date lastUpdate;
+        private List<Image> images = new ArrayList<Image>();
         private UserPostForViewerModel User = new UserPostForViewerModel();
         
         public PostForViewerModel() {
@@ -81,6 +89,46 @@ public class PostForViewerModel{
         }
         public void setUser(UserPostForViewerModel User) {
             this.User = User;
+        }
+
+        public List<Image> getImages() {
+            return images;
+        }
+
+        public void setImages(List<Image> images) {
+            this.images = images;
+        }
+
+        public boolean isIsLiked() {
+            return isLiked;
+        }
+
+        public void setIsLiked(boolean isLiked) {
+            this.isLiked = isLiked;
+        }
+
+        public boolean isIsSaved() {
+            return isSaved;
+        }
+
+        public void setIsSaved(boolean isSaved) {
+            this.isSaved = isSaved;
+        }
+
+        public boolean isIsOwner() {
+            return isOwner;
+        }
+
+        public void setIsOwner(boolean isOwner) {
+            this.isOwner = isOwner;
+        }
+
+        public long getCommentCount() {
+            return commentCount;
+        }
+
+        public void setCommentCount(long commentCount) {
+            this.commentCount = commentCount;
         }
         
     }

@@ -7,6 +7,7 @@ package com.utopia.social_network.utopia_api.repository;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface PostFavoriteRepository extends JpaRepository<PostFavorite, Long>{
 
-    List<PostFavorite> findAllPostFavoriteByUserId(Long userId);
+    List<PostFavorite> findAllPostFavoriteByUserId(Long userId,Sort sort);
     Optional<PostFavorite> findPostFavoriteByUserIdAndPostId(Long userId,Long postId);
 }

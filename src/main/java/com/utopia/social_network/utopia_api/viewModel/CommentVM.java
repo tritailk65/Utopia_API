@@ -19,6 +19,8 @@ public class CommentVM {
     @Nullable
     private int totals = 0;
     @Nullable
+    private boolean cmtOwner = false;
+    @Nullable
     private UserPostForViewerModel user = new UserPostForViewerModel();
     @Nullable
     private List<ReplyCommentVM> replies = new ArrayList<ReplyCommentVM>();
@@ -95,6 +97,14 @@ public class CommentVM {
 
     public void setReplies(List<ReplyCommentVM> replies) {
         this.replies = replies;
+    }
+
+    public boolean isCmtOwner() {
+        return cmtOwner;
+    }
+
+    public void setCmtOwner(boolean cmtOwner) {
+        this.cmtOwner = cmtOwner;
     }
 
     

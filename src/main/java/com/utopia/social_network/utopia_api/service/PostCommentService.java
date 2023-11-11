@@ -51,8 +51,12 @@ public class PostCommentService implements IPostCommentService {
     }
     
     
-    public List<CommentVM> getAllCommentByPostId(Long id) {
+    public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
         List<CommentVM> comments = new ArrayList<CommentVM>();
+        List<Post> pCheck = postRepository.findAllByIdAndIsActive(id, 1);
+        if(pCheck.isEmpty()){
+            throw new ResourceNotFoundException("Khong tim thay! Kiem tra lai ID");
+        }
         List<PostComment> data = commentRepository.findAllPostCommentByPostId(id);
 
         if (data.isEmpty()) {
@@ -66,6 +70,10 @@ public class PostCommentService implements IPostCommentService {
                 CommentVM tmp = new CommentVM(p.getId(), p.getUserId(), p.getPostId(), p.getDateComment());
                 tmp.setComment(p.getComment());
                 tmp.setTotals(0);
+                
+                if(p.getUserId() == user){
+                    tmp.setCmtOwner(true);
+                }
                 
                 if(p.getUser() != null){
                     tmp.getUser().setId(p.getUser().getId());
@@ -93,6 +101,11 @@ public class PostCommentService implements IPostCommentService {
                     reply.setParentId(p.getParentId());
                     reply.setPostId(p.getPostId());
                     reply.setUserId(p.getUserId());
+                    
+                    if(p.getUserId() == user){
+                        reply.setCmtOwner(true);
+                    }
+                    
                     if(p.getUser() != null ){
                         reply.getUser().setId(p.getUser().getId());
                         reply.getUser().setAvatarPath(p.getUser().getAvatarPath());
@@ -117,7 +130,7 @@ public class PostCommentService implements IPostCommentService {
             if(tmp_user.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy user");
             }
-            List<Post> tmp_post = postRepository.findAllById(p.getPostId());
+            List<Post> tmp_post = postRepository.findAllByIdAndIsActive(p.getPostId(),1);
             if(tmp_post.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy post");
             }
@@ -145,6 +158,8 @@ public class PostCommentService implements IPostCommentService {
                 notiRepository.save(noti);
             }
             
+            post.setCommentCount(post.getCommentCount()+1);
+            postRepository.save(post);
             
             return commentModel;
         } catch (ParseException ex){
@@ -160,7 +175,7 @@ public class PostCommentService implements IPostCommentService {
             if(tmp_user.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy user");
             }
-            List<Post> tmp_post = postRepository.findAllById(p.getPostId());
+            List<Post> tmp_post = postRepository.findAllByIdAndIsActive(p.getPostId(),1);
             if(tmp_post.isEmpty()){
                 throw new MyBadRequestException("ko tìm thấy post");
             }
@@ -192,6 +207,9 @@ public class PostCommentService implements IPostCommentService {
 
                 notiRepository.save(noti);
             }
+            
+            post.setCommentCount(post.getCommentCount()+1);
+            postRepository.save(post);
             
             return commentModel;
         } catch (ParseException ex){
@@ -225,17 +243,30 @@ public class PostCommentService implements IPostCommentService {
     public boolean deleteComment(long commentId,long token) {
         try{
             PostComment m_comment = commentRepository.findPostCommentByIdAndUserId(commentId, token);
+            Post m_post = postRepository.findPostById(m_comment.getPostId());
             if(m_comment == null){
                 return false;
             }
             if(m_comment.getParentId() <= 0){
                 // Nếu comment là comment cha thì xóa tất cả replies
+                List<PostComment> childs = commentRepository.findAllPostCommentByParentId((int)m_comment.getId());
+                if(childs.size() > 0){
+                    m_post.setCommentCount(m_post.getCommentCount() - childs.size() - 1);
+                }
+                else{
+                    m_post.setCommentCount(m_post.getCommentCount() - 1);
+                }
+                
+                postRepository.save(m_post);
                 commentRepository.deleteComment(commentId);
                 commentRepository.deleteReplies(commentId);
             }
             else{
                 // Nếu comment là reply con thì chỉ xóa comment đó
                 commentRepository.deleteComment(commentId);
+                
+                m_post.setCommentCount(m_post.getCommentCount() - 1);
+                postRepository.save(m_post);
             }
             return true;
         }

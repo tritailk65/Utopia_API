@@ -4,6 +4,8 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.common.FilterSort;
+import com.utopia.social_network.utopia_api.entity.Image;
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostLike;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -62,27 +65,28 @@ public class PostLikeService implements IPostLikeService{
         if(user.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai ID");
         }
-        Optional<Post> post = postRepo.findById(postId);
-        if(post.isEmpty()){
+        List<Post> m_post = postRepo.findAllByIdAndIsActive(postId,1);
+        if(m_post.isEmpty()){
             throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
         }
         Optional<PostLike> postLike = repository.findPostLikeByPostIdAndUserId(postId, userId);
+        Post post = m_post.get(0);
         if(postLike.isEmpty()){
             PostLike newPostLike = savePost(userId,postId);
-            long likeCount = post.get().getLikeCount() + 1;
-            postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+            long likeCount = post.getLikeCount() + 1;
+            postRepo.updatePostSetLikeAndShareById(likeCount,post.getShareCount(), postId);
             model.setId(newPostLike.getId());
             model.setPostId(newPostLike.getPostId());
             model.setUserId(newPostLike.getUserId());
             model.setDateLike(newPostLike.getDateLike());
             
-            if(user.get().getId() != post.get().getUserId()){
+            if(user.get().getId() != post.getUserId()){
                 Date dateNow = new Date();
                 Notification noti = new Notification();
                 noti.setContext(user.get().getFullName()+" just liked your post");
                 noti.setType("like");
                 noti.setUpdateAt(dateNow);
-                noti.setUserId(post.get().getUserId());
+                noti.setUserId(post.getUserId());
                 noti.setSourceId(user.get().getId());
 
                 notiRepo.save(noti);
@@ -92,8 +96,8 @@ public class PostLikeService implements IPostLikeService{
         }
         PostLike tmp = postLike.get();
         repository.delete(tmp);
-        long likeCount = post.get().getLikeCount() - 1;
-        postRepo.updatePostSetLikeAndShareById(likeCount,post.get().getShareCount(), postId);
+        long likeCount = post.getLikeCount() - 1;
+        postRepo.updatePostSetLikeAndShareById(likeCount,post.getShareCount(), postId);
         model.setId(tmp.getId());
         model.setPostId(tmp.getPostId());
         model.setUserId(tmp.getUserId());
@@ -104,7 +108,7 @@ public class PostLikeService implements IPostLikeService{
 
     @Override
     public List<PostForViewerModel> getAllPostLikeByUser(Long userId) {
-        List<PostLike> likes = repository.findAllPostLikeByUserId(userId);
+        List<PostLike> likes = repository.findAllPostLikeByUserId(userId,FilterSort.getDesc("dateLike"));
         List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
         for(PostLike x : likes){   
             if(x.getPost().getIsActive() == 1){
@@ -117,9 +121,16 @@ public class PostLikeService implements IPostLikeService{
                 tmp.setIsHideLike(x.getPost().getIsHideLike());
                 tmp.setLastUpdate(x.getPost().getLastUpdate());
                 tmp.setLikeCount(x.getPost().getLikeCount());
+                tmp.setCommentCount(x.getPost().getCommentCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
-
+                
+                if(x.getPost().getPostImages().size() > 0){
+                    for(Image img : x.getPost().getPostImages()){
+                        tmp.getImages().add(img);
+                    }
+                }
+                
                 tmp.getUser().setId(x.getPost().getUser().getId());
                 tmp.getUser().setUserName(x.getPost().getUser().getUserName());
                 tmp.getUser().setCreateAt(x.getUser().getCreateAt());
