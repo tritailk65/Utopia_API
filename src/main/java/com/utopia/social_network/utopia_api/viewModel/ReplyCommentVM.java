@@ -16,6 +16,8 @@ public class ReplyCommentVM {
     @NonNull
     private int parentId;
     @Nullable
+    private boolean cmtOwner = false;
+    @Nullable
     private Date date;
     @Nullable
     private UserPostForViewerModel user = new UserPostForViewerModel();
@@ -87,5 +89,14 @@ public class ReplyCommentVM {
         this.user = user;
     }
 
+    public boolean isCmtOwner() {
+        return cmtOwner;
+    }
+
+    public void setCmtOwner(boolean cmtOwner) {
+        this.cmtOwner = cmtOwner;
+    }
+
+    
     
 }
