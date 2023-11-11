@@ -32,12 +32,7 @@ public class FollowingService implements IFollowingService{
     public List<Following> getAllFollowingByUser(@Nullable Long id) {
 
         List<Following> followById = _followingRepo.findAllByUserTargetId(id);
-        
-        if (followById.isEmpty()) {
-            throw new ResourceNotFoundException("Khong tim thay! Kiem tra lai ID");
-        } else {
-            return followById;
-        }
+        return followById;
 
     }    
 

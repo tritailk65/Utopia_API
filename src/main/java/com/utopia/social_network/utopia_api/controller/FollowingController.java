@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.utopia.social_network.utopia_api.interfaces.IFollowingService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @CrossOrigin
@@ -30,9 +31,9 @@ public class FollowingController {
     @Autowired
     private IFollowingService followService;
     
-    @GetMapping(value = {"/{id}"})
-    private APIResult getAllFollowerByUser(@PathVariable("id") Long id){
-        return new APIResult(200,"Ok",null,followService.getAllFollowingByUser(id));
+    @GetMapping
+    private APIResult getAllFollowerByUser(@RequestHeader("token") Long token){
+        return new APIResult(200,"Ok",null,followService.getAllFollowingByUser(token));
     }
     
     @PutMapping(value = {"/CancelFollow/UserSrc={idSrc}&UserTar={idTar}"})
