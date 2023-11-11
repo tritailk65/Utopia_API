@@ -51,7 +51,7 @@ public class PostCommentService implements IPostCommentService {
     }
     
     
-    public List<CommentVM> getAllCommentByPostId(Long id) {
+    public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
         List<CommentVM> comments = new ArrayList<CommentVM>();
         List<Post> pCheck = postRepository.findAllByIdAndIsActive(id, 1);
         if(pCheck.isEmpty()){
@@ -70,6 +70,10 @@ public class PostCommentService implements IPostCommentService {
                 CommentVM tmp = new CommentVM(p.getId(), p.getUserId(), p.getPostId(), p.getDateComment());
                 tmp.setComment(p.getComment());
                 tmp.setTotals(0);
+                
+                if(p.getUserId() == user){
+                    tmp.setCmtOwner(true);
+                }
                 
                 if(p.getUser() != null){
                     tmp.getUser().setId(p.getUser().getId());
@@ -97,6 +101,11 @@ public class PostCommentService implements IPostCommentService {
                     reply.setParentId(p.getParentId());
                     reply.setPostId(p.getPostId());
                     reply.setUserId(p.getUserId());
+                    
+                    if(p.getUserId() == user){
+                        reply.setCmtOwner(true);
+                    }
+                    
                     if(p.getUser() != null ){
                         reply.getUser().setId(p.getUser().getId());
                         reply.getUser().setAvatarPath(p.getUser().getAvatarPath());

@@ -17,7 +17,7 @@ import java.util.List;
 public interface IPostCommentService {
     List<PostComment> getAllPostCommentById(Long id);
     
-    List<CommentVM> getAllCommentByPostId(Long id);
+    List<CommentVM> getAllCommentByPostId(Long postId,Long userId);
     
     PostCommentModel userCommentPost(PostCommentModel commentModel);
     
