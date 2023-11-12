@@ -126,6 +126,13 @@ public class UserService implements IUserService {
         
         return rs;
     }
+
+    @Override
+    public User getUserByUserName(String name) {
+        User rs = userRepo.findUserByUserName(name);
+        return rs;
+    }
+    
     
     
 }
