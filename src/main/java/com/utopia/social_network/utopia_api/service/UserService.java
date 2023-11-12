@@ -119,7 +119,12 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> getSuggestByUser(Long id) {
-        return null;
+        if(userRepo.findUserById(id) == null){
+            throw new ResourceNotFoundException("ID User khong dung");
+        }
+        List<User> rs = userRepo.getListSuggestFollow(id);
+        
+        return rs;
     }
     
     

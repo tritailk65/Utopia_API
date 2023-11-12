@@ -48,25 +48,27 @@ public class PostController {
     @PostMapping
     private APIResult createdNewPost(@RequestBody CreatePostModel postModel) throws ParseException{
         Post post = convertToEntity(postModel);
-        postService.CreatePost(post);
-        return rs.MessageSuccess("Tạo mới bài viết thành công !", null);
+        Long id = postService.CreatePostV2(post);
+        return rs.MessageSuccess("Tạo mới bài viết thành công !", id);
     }
     
     @PostMapping(value = "/UploadImage/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    private APIResult uploadFile(@RequestPart(value = "avatar") List<MultipartFile> files, @PathVariable("id") Long id) {
-        List<String> lst = new ArrayList<String>();
-        for(MultipartFile file : files){
-            String fileName = fileStorageService.storeFile(file);
-
+    private APIResult uploadFile(@RequestPart(value = "avatar") MultipartFile files, @PathVariable("id") Long id) {
+        
+        //List<String> lst = new ArrayList<String>();
+        //for(MultipartFile file : files){
+            String fileName = fileStorageService.storeFile(files);
+            System.out.println(fileName);
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     //                .path("/downloadFile/")
                     .path(fileName)
                     .toUriString();
 
-            String rs = fileName + fileDownloadUri + file.getContentType() + file.getSize();
-            lst.add(fileName);
-        }
-        postService.updatePostImage(lst, id);
+            String rs = fileName + fileDownloadUri + files.getContentType() + files.getSize();
+           // lst.add(fileName);
+        //}
+        System.out.println("abcccc");
+        postService.updateSinglePostImage(fileName, id);
         return new APIResult(200, "Ok", null, null);
     }
     
