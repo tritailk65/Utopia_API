@@ -46,7 +46,12 @@ public class UserService implements IUserService {
             return u;
         }
     }
-
+    @Override
+    public User getUserByName(String userName){
+        User u= userRepo.findUserByUserName(userName);
+        if(u==null) throw new ResourceNotFoundException("Khong tim thay User! Kiem tra lai Username");
+        else return u;
+    }
     @Override
     public User login(UserLoginModel uLogin) {
         User u = new User();
@@ -100,7 +105,13 @@ public class UserService implements IUserService {
         //Khong can try-cath o day
         userRepo.updateUserSetAvatarPathById(path, id);
     }
-
+    
+    @Override
+    public String getFileNameFromUser(String name){
+    User u= userRepo.findUserByUserName(name);
+    String fileName= u.getAvatarPath();
+    return fileName;
+    }
     @Override
     public User editProfile(UserProfileModel u, Long id) {
         User uCheck = userRepo.findUserById(id);

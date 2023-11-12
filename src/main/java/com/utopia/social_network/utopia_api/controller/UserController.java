@@ -62,8 +62,8 @@ public class UserController {
 
     @GetMapping(value = "/Avatar/{name}")
     private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
-
-        String fileName = name;
+        
+        String fileName = userService.getFileNameFromUser(name);
         
         if (fileName == null){
             throw new ResourceNotFoundException("Không tìm thấy hình ảnh");
@@ -97,9 +97,9 @@ public class UserController {
         return new APIResult(200, "Ok", null, userService.getAllUser());
     }
 
-    @GetMapping(value = {"/{id}"})
-    private APIResult getAllUserById(@PathVariable("id") Long id) {
-        return new APIResult(200, "Ok", null, userService.getUserById(id));
+    @GetMapping(value = {"/{name}"})
+    private APIResult getAllUserByUserName(@PathVariable("name") String name) {
+        return new APIResult(200, "Ok", null, userService.getUserByName(name));
     }
 
     @PostMapping(value = {"/Login"})

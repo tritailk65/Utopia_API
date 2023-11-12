@@ -22,6 +22,8 @@ public interface IUserService {
     
     User getUserById(Long id);
     
+    User getUserByName(String userName);
+    
     User login(UserLoginModel uLogin);
 
     User signUp(UserRegisterModel userRegisterModel);
@@ -29,4 +31,6 @@ public interface IUserService {
     User editProfile(UserProfileModel uProfile, Long id);
     
     List<User> getSuggestByUser (Long id);
+    
+    String getFileNameFromUser(String name);
 }
