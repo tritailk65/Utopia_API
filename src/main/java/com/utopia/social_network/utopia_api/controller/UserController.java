@@ -116,5 +116,10 @@ public class UserController {
     private APIResult editProfile(@RequestBody UserProfileModel uProfile, @PathVariable("id") Long id) {
         return new APIResult(200, "Ok", null, userService.editProfile(uProfile, id));
     }
+    
+    @GetMapping(value = {"/SuggestFollow"})
+    private APIResult suggestFollow(@RequestHeader Long token){
+        return new APIResult(200, "Ok", null, userService.getSuggestByUser(token));
+    }
 
 }
