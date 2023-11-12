@@ -5,6 +5,8 @@
 package com.utopia.social_network.utopia_api.repository;
 
 import com.utopia.social_network.utopia_api.entity.Following;
+import com.utopia.social_network.utopia_api.model.FollowingModel;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,5 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface FollowingRepository extends JpaRepository<Following, Long>{
-    
+    List<FollowingModel> findByUserSourceId(long userSourceId);
+    List<FollowingModel> findByUserSourceIdAndUserTargetIdIn(long userSourceId, List<Long> userTargetIds);
+    boolean deleteByUserSourceIdAndUserTargetId(long userSourceId, long userTargetId);
+    FollowingModel findByUserSourceIdAndUserTargetId(long userSourceId, long userTargetId);
 }

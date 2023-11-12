@@ -41,6 +41,10 @@ public class Following {
     @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
     private User user;
 
+    public Following() {
+        
+    }
+    
     public Following(long id, long userSourceId, long userTargetId, Date dateFollow, User user) {
         this.id = id;
         this.userSourceId = userSourceId;
