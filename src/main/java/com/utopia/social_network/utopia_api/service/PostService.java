@@ -13,6 +13,7 @@ import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
+import com.utopia.social_network.utopia_api.model.CreatePostModel;
 import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.model.UserPostForViewerModel;
 import com.utopia.social_network.utopia_api.repository.ImageRepository;
@@ -176,6 +177,42 @@ public class PostService implements IPostService {
                 post.getPostImages().add(img);
                 
             }
+            postRepo.save(post);
+        }
+        catch(Exception ex){
+            throw new MyBadRequestException("Đã có lỗi xảy ra");
+        }
+    }
+
+    @Override
+    public Long CreatePostV2(Post post) {
+        Date dateNow = new Date();
+        post.setDatePublished(dateNow);
+        post.setLastUpdate(dateNow);
+        post.setIsActive(1);
+        post.setLikeCount(0);
+        post.setShareCount(0);
+        post.setCommentCount(0);
+        postRepo.save(post);
+        return post.getId();
+    }
+
+    @Override
+    public void updateSinglePostImage(String path, Long id) {
+        try{
+            Post post = postRepo.findPostById(id);
+            if(post == null){
+                throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+            }
+            Date dateNow = new Date();
+            
+            Image img = new Image();
+                img.setName(path);
+                img.setSize(10);
+                img.setType("post");
+                img.setDateUpdate(dateNow);
+                imgRepo.save(img);
+                post.getPostImages().add(img);
             postRepo.save(post);
         }
         catch(Exception ex){
