@@ -5,6 +5,8 @@
 package com.utopia.social_network.utopia_api.model;
 
 import java.util.Date;
+import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -17,7 +19,6 @@ public class CreatePostModel {
     private String content;
     private int isHideLike;
     private int commentStat;
-
     public CreatePostModel(Long userId, String title, String content, int isHideLike, int commentStat) {
         this.userId = userId;
         this.title = title;
@@ -33,7 +34,7 @@ public class CreatePostModel {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
+    
     public String getTitle() {
         return title;
     }
