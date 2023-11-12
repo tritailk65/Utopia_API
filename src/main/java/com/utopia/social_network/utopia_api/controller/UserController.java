@@ -62,7 +62,6 @@ public class UserController {
 
     @GetMapping(value = "/Avatar/{name}")
     private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
-
         String fileName = name;
         
         if (fileName == null){
@@ -97,9 +96,14 @@ public class UserController {
         return new APIResult(200, "Ok", null, userService.getAllUser());
     }
 
-    @GetMapping(value = {"/{id}"})
-    private APIResult getAllUserById(@PathVariable("id") Long id) {
+    @GetMapping(value = {"/GetById/{id}"})
+    private APIResult getUserById(@PathVariable("id") Long id) {
         return new APIResult(200, "Ok", null, userService.getUserById(id));
+    }
+    
+    @GetMapping(value = {"/GetByName/{name}"})
+    private APIResult getUserByName(@PathVariable("name") String name) {
+        return new APIResult(200, "Ok", null, userService.getUserByUserName(name));
     }
 
     @PostMapping(value = {"/Login"})

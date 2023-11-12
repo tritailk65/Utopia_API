@@ -18,6 +18,8 @@ public interface IUserService {
     
     List<User> getAllUser();
     
+    User getUserByUserName(String name);
+    
     void updateUserAvatarPath(String path, Long id);  
     
     User getUserById(Long id);
