@@ -100,7 +100,7 @@ public class UserService implements IUserService {
         //Khong can try-cath o day
         userRepo.updateUserSetAvatarPathById(path, id);
     }
-
+    
     @Override
     public User editProfile(UserProfileModel u, Long id) {
         User uCheck = userRepo.findUserById(id);

@@ -62,7 +62,6 @@ public class UserController {
 
     @GetMapping(value = "/Avatar/{name}")
     private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
-
         String fileName = name;
         
         if (fileName == null){
