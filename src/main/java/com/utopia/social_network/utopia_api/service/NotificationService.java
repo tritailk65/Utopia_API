@@ -44,7 +44,7 @@ public class NotificationService implements INotificationService{
             if (when.contains("week")){
                 cal.add(Calendar.DAY_OF_YEAR, -7);  
                 date = cal.getTime();  
-                notiList = notiRepo.findAllNotificationByAmount(id, date,dateNow);
+                notiList = notiRepo.findAllNotificationByAmount( id, date,dateNow);
             } else if (when.contains("month")){
                 cal.add(Calendar.DAY_OF_YEAR, -7);  
                 date = cal.getTime();  

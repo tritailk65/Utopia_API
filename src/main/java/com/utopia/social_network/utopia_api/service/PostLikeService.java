@@ -83,7 +83,7 @@ public class PostLikeService implements IPostLikeService{
             if(user.get().getId() != post.getUserId()){
                 Date dateNow = new Date();
                 Notification noti = new Notification();
-                noti.setContext(user.get().getFullName()+" just liked your post");
+                noti.setContext(user.get().getUserName()+" just liked your post");
                 noti.setType("like");
                 noti.setUpdateAt(dateNow);
                 noti.setUserId(post.getUserId());
@@ -96,6 +96,10 @@ public class PostLikeService implements IPostLikeService{
         }
         PostLike tmp = postLike.get();
         repository.delete(tmp);
+        
+        //Delete notification if unlike
+        notiRepo.deleteByUserIdAndSourceIdAndType(post.getUserId(), user.get().getId(), "like");
+        
         long likeCount = post.getLikeCount() - 1;
         postRepo.updatePostSetLikeAndShareById(likeCount,post.getShareCount(), postId);
         model.setId(tmp.getId());

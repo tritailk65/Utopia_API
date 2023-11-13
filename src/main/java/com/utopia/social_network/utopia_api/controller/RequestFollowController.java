@@ -58,7 +58,7 @@ public class RequestFollowController {
     
     @PutMapping(value = {"/CancelRequestFollow/UserTar={idTar}"})
     private APIResult cancelRequest(@RequestHeader("Token") Long token,@PathVariable("idTar") Long idTar){
-        rqService.deleteRequestFollow(token, idTar);
+        rqService.cancelRequestFollow(token, idTar);
         return rs.MessageSuccess("Hủy bỏ lời mời follow thành công !", null);   
     }
 
