@@ -4,16 +4,17 @@
  */
 package com.utopia.social_network.utopia_api.controller;
 
-import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.interfaces.IPostLikeService;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.viewModel.SavePostLikeVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;    
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author trita
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/api/PostLike")
 public class PostLikeController {
@@ -38,9 +40,9 @@ public class PostLikeController {
         return new APIResult(200, "Ok", null, postLikeService.getAllPostLikeByUser(userid));
     }
 
-    @PostMapping(value = {"/UserId={UserId}&PostId={PostId}"})
-    private APIResult userSavePost(@PathVariable("UserId") Long userid, @PathVariable("PostId") Long postid) {
-        SavePostLikeVM result = postLikeService.LikePost(userid, postid);
+    @PostMapping(value = {"/PostId={PostId}"})
+    private APIResult userSavePost(@RequestHeader("Token") Long token, @PathVariable("PostId") Long postid) {
+        SavePostLikeVM result = postLikeService.LikePost(token, postid);
         return rs.MessageSuccess("Thích bài viết thành công !", result);
     }
 }

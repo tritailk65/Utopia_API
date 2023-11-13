@@ -128,6 +128,28 @@ public class RequestFollowService implements IRequestFollowService{
     }
 
     @Override
+    public void cancelRequestFollow(Long userSrc, Long userTar) {
+        try {
+//          #region: Check data
+            if(userRepo.findUserById(userSrc )== null){
+                throw new ResourceNotFoundException("ID User source sai, kiểm tra lại");
+            }
+            if(userRepo.findUserById(userTar) == null){
+                throw new ResourceNotFoundException("ID User target sai, kiểm tra lại");
+            }
+//          #endregion
+
+            int i = rqRepository.deleteByUserSourceIdAndUserTargetId(userSrc,userTar);
+            int j = flRepo.deleteByUserSourceIdAndUserTargetId(userSrc, userTar);
+            
+        } catch (Exception ex){
+            throw new MyBadRequestException(ex.toString());
+        }
+    }
+    
+    
+
+    @Override
     public List<RequestFollow> getAllRequestFollow(Long userTar) {
         List<RequestFollow> rqs = rqRepository.findByUserTargetIdAndIsPending(userTar,1);
         

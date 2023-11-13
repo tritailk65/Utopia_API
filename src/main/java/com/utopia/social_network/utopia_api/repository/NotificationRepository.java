@@ -23,15 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
     @Modifying
-    @Query(value =  "select * from notification n where n.user_id = ? and n.update_at >= ? and n.update_at <= ?", nativeQuery = true)
+    @Query(value =  "select * from notification n where n.user_id = ? and n.update_at >= ? and n.update_at <= ? order by 5 desc", nativeQuery = true)
     List<Notification> findAllNotificationByAmount(Long id, Date dateAfter, Date dateBefore);
     
     @Modifying
-    @Query(value =  "select * from notification n where n.user_id = ? and month(n.update_at) = ? and n.update_at < ?", nativeQuery = true)
+    @Query(value =  "select * from notification n where n.user_id = ? and month(n.update_at) = ? and n.update_at < ? order by 5 desc", nativeQuery = true)
     List<Notification> findAllNotificationByMonthAndDate(Long id, int month, Date dateBefore);
     
     @Modifying
-    @Query(value =  "select * from notification n where n.user_id = ? and month(n.update_at) = ?", nativeQuery = true)
+    @Query(value =  "select * from notification n where n.user_id = ? and month(n.update_at) = ? order by 5 desc", nativeQuery = true)
     List<Notification> findAllNotificationByMonth(Long id, int month);
+    
+    void deleteByUserIdAndSourceIdAndType(Long UserId, Long SourceId, String type);
 
 }

@@ -24,5 +24,7 @@ public interface IRequestFollowService {
     void deleteRequestFollow(Long userSrc, Long urerTar);
     
     List<RequestFollow> getAllRequestFollow(Long userTar);
+    
+    void cancelRequestFollow(Long userSrc, Long userTar);
    
 }
