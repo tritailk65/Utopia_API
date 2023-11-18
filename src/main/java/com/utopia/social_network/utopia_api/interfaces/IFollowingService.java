@@ -15,5 +15,5 @@ public interface IFollowingService {
     
     List<Following> getAllFollowingByUser(Long id);
     
-    Boolean cancelFollow(Long userSrc, Long userTar);
+    void cancelFollow(Long userSrc, Long userTar);
 }

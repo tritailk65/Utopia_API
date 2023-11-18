@@ -18,6 +18,8 @@ public interface IUserService {
     
     List<User> getAllUser();
     
+    User getUserByUserName(String name);
+    
     void updateUserAvatarPath(String path, Long id);  
     
     User getUserById(Long id);
@@ -27,4 +29,6 @@ public interface IUserService {
     User signUp(UserRegisterModel userRegisterModel);
     
     User editProfile(UserProfileModel uProfile, Long id);
+    
+    List<User> getSuggestByUser (Long id);
 }

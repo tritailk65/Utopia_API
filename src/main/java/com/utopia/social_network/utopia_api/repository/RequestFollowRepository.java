@@ -21,13 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface RequestFollowRepository extends JpaRepository<RequestFollow, Long>{
-    RequestFollow findRequestFollowByUserSourceIdAndUserTargetId(Long usersrcid, Long usertarid);
+    RequestFollow findRequestFollowByUserSourceIdAndUserTargetIdAndIsPending(Long userSrc, Long userTar, int isPending);
     
     @Modifying
     @Query(value =  "update request_follow r "
                     + "set r.approve_date = ? , r.is_pending = ? "
-                    + "where r.user_source_id = ? and r.user_target_id= ?", nativeQuery = true)
-    void updateFollowRequestSetAcceptFollow(Date approve_date, int isPending, long userSrc, long userTar);
+                    + "where r.user_source_id = ? and r.user_target_id= ? and r.id = ?", nativeQuery = true)
+    void updateFollowRequestSetAcceptFollow(Date approve_date, int isPending, long userSrc, long userTar, long id);
 
     RequestFollow findByUserTargetId(Long userTar);
     

@@ -44,10 +44,11 @@ public class RequestFollow {
     @Column
     private int isPending;  //For check request in status waiting
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    //EAGER for transaction one more time
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userSourceId", insertable = false, updatable = false)
-    private User user;
-
+    private User userSrc;
+    
     public Long getId() {
         return id;
     }
@@ -91,6 +92,19 @@ public class RequestFollow {
         this.isPending = isPending;
     }
 
-    
-    
+    public User getUserSrc() {
+        return userSrc;
+    }
+
+    public void setUserSrc(User userSrc) {
+        this.userSrc = userSrc;
+    }
+
+//    public User getUserTar() {
+//        return userTar;
+//    }
+//
+//    public void setUserTar(User userTar) {
+//        this.userTar = userTar;
+//    }
 }
