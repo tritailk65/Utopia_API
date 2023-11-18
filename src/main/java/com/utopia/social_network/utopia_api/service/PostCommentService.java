@@ -51,76 +51,76 @@ public class PostCommentService implements IPostCommentService {
     }
     
     
-    public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
-        List<CommentVM> comments = new ArrayList<CommentVM>();
-        List<Post> pCheck = postRepository.findAllByIdAndIsActive(id, 1);
-        if(pCheck.isEmpty()){
-            throw new ResourceNotFoundException("Khong tim thay! Kiem tra lai ID");
-        }
-        List<PostComment> data = commentRepository.findAllPostCommentByPostId(id);
+public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
+    List<CommentVM> comments = new ArrayList<CommentVM>();
+    List<Post> pCheck = postRepository.findAllByIdAndIsActive(id, 1);
+    if(pCheck.isEmpty()){
+        throw new ResourceNotFoundException("Khong tim thay! Kiem tra lai ID");
+    }
+    List<PostComment> data = commentRepository.findAllPostCommentByPostId(id);
 
-        if (data.isEmpty()) {
-            return comments;
-        }
-
-        Map<Long, CommentVM> commentMap = new HashMap<>(); // Sử dụng Map (Dictionary) để lưu trữ CommentVM theo id
-
-        for (PostComment p : data) {
-            if (p.getParentId() <= 0) {
-                CommentVM tmp = new CommentVM(p.getId(), p.getUserId(), p.getPostId(), p.getDateComment());
-                tmp.setComment(p.getComment());
-                tmp.setTotals(0);
-                
-                if(p.getUserId() == user){
-                    tmp.setCmtOwner(true);
-                }
-                
-                if(p.getUser() != null){
-                    tmp.getUser().setId(p.getUser().getId());
-                    tmp.getUser().setAvatarPath(p.getUser().getAvatarPath());
-                    tmp.getUser().setCreateAt(p.getUser().getCreateAt());
-                    tmp.getUser().setUserName(p.getUser().getUserName());
-                    tmp.getUser().setWebsite(p.getUser().getWebsite());
-                }
-                comments.add(tmp);
-
-                // Lưu CommentVM cha vào từ điển
-                commentMap.put(p.getId(), tmp);
-            }
-        }
-        
-        for (PostComment p : data) {
-            if (p.getParentId() > 0) {
-                long tmp_id = p.getParentId();
-                CommentVM parentComment = commentMap.get(tmp_id);
-                if (parentComment != null) {
-                    ReplyCommentVM reply = new ReplyCommentVM();
-                    reply.setId(p.getId());
-                    reply.setComment(p.getComment());
-                    reply.setDate(p.getDateComment());
-                    reply.setParentId(p.getParentId());
-                    reply.setPostId(p.getPostId());
-                    reply.setUserId(p.getUserId());
-                    
-                    if(p.getUserId() == user){
-                        reply.setCmtOwner(true);
-                    }
-                    
-                    if(p.getUser() != null ){
-                        reply.getUser().setId(p.getUser().getId());
-                        reply.getUser().setAvatarPath(p.getUser().getAvatarPath());
-                        reply.getUser().setCreateAt(p.getUser().getCreateAt());
-                        reply.getUser().setUserName(p.getUser().getUserName());
-                        reply.getUser().setWebsite(p.getUser().getWebsite());
-                    }
-                    parentComment.getReplies().add(reply);
-                    parentComment.setTotals(parentComment.getTotals() + 1);
-                }
-            }
-        }
-
+    if (data.isEmpty()) {
         return comments;
     }
+
+    Map<Long, CommentVM> commentMap = new HashMap<>(); // Sử dụng Map (Dictionary) để lưu trữ CommentVM theo id
+
+    for (PostComment p : data) {
+        if (p.getParentId() <= 0) {
+            CommentVM tmp = new CommentVM(p.getId(), p.getUserId(), p.getPostId(), p.getDateComment());
+            tmp.setComment(p.getComment());
+            tmp.setTotals(0);
+                
+            if(p.getUserId() == user){
+                tmp.setCmtOwner(true);
+            }
+                
+            if(p.getUser() != null){
+                tmp.getUser().setId(p.getUser().getId());
+                tmp.getUser().setAvatarPath(p.getUser().getAvatarPath());
+                tmp.getUser().setCreateAt(p.getUser().getCreateAt());
+                tmp.getUser().setUserName(p.getUser().getUserName());
+                tmp.getUser().setWebsite(p.getUser().getWebsite());
+            }
+            comments.add(tmp);
+
+            // Lưu CommentVM cha vào từ điển
+            commentMap.put(p.getId(), tmp);
+        }
+    }
+        
+    for (PostComment p : data) {
+        if (p.getParentId() > 0) {
+            long tmp_id = p.getParentId();
+            CommentVM parentComment = commentMap.get(tmp_id);
+            if (parentComment != null) {
+                ReplyCommentVM reply = new ReplyCommentVM();
+                reply.setId(p.getId());
+                reply.setComment(p.getComment());
+                reply.setDate(p.getDateComment());
+                reply.setParentId(p.getParentId());
+                reply.setPostId(p.getPostId());
+                reply.setUserId(p.getUserId());
+                    
+                if(p.getUserId() == user){
+                    reply.setCmtOwner(true);
+                }
+                    
+                if(p.getUser() != null ){
+                    reply.getUser().setId(p.getUser().getId());
+                    reply.getUser().setAvatarPath(p.getUser().getAvatarPath());
+                    reply.getUser().setCreateAt(p.getUser().getCreateAt());
+                    reply.getUser().setUserName(p.getUser().getUserName());
+                    reply.getUser().setWebsite(p.getUser().getWebsite());
+                }
+                parentComment.getReplies().add(reply);
+                parentComment.setTotals(parentComment.getTotals() + 1);
+            }
+        }
+    }
+
+    return comments;
+}
     
     @Override
     public PostCommentModel userCommentPost(PostCommentModel commentModel){
