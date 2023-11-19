@@ -55,7 +55,7 @@ public class Post{
     @Column
     private int commentStat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserId", insertable = false, updatable = false)
     private User user;
     
@@ -182,7 +182,4 @@ public class Post{
     public void setCommentCount(long commentCount) {
         this.commentCount = commentCount;
     }
-
-    
-    
 }
