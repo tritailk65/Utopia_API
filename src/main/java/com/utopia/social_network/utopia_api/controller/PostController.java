@@ -9,6 +9,7 @@ import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
 import com.utopia.social_network.utopia_api.model.CreatePostModel;
 import com.utopia.social_network.utopia_api.service.FileStorageService;
+import io.swagger.v3.oas.annotations.headers.Header;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,11 @@ public class PostController {
     @GetMapping(value = "/getListPostForViewer/page={page}")
     private APIResult getListPostForViewer(@RequestHeader("token") Long user,@PathVariable("page") int page){
         return new APIResult(200,"Ok",null,postService.GetListPostForViewer(user,page));
+    }
+    
+    @GetMapping(value = "/GetListPostProfile/UserName={name}&page={page}")
+    private APIResult getListPostProfile(@PathVariable("name") String name,@PathVariable("page") int page){
+        return new APIResult(200,"Ok",null,postService.GetListPostProfile(name,page));
     }
     
     @GetMapping(value = "/{id}")

@@ -8,6 +8,7 @@ import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IUserService;
+import com.utopia.social_network.utopia_api.model.ProfileInfoModel;
 import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
@@ -132,7 +133,14 @@ public class UserService implements IUserService {
         User rs = userRepo.findUserByUserName(name);
         return rs;
     }
+
+    @Override
+    public ProfileInfoModel getProfileInfo(Long id) {
+        ProfileInfoModel rs = new ProfileInfoModel();
+        
+        
+        return rs;
+    }
     
-    
-    
+   
 }
