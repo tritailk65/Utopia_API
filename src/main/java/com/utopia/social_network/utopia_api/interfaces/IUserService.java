@@ -19,7 +19,7 @@ public interface IUserService {
     
     List<User> getAllUser();
     
-    User getUserByUserName(String name);
+    UserProfileModel getUserByUserName(String name);
     
     void updateUserAvatarPath(String path, Long id);  
     

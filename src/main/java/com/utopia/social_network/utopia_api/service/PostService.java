@@ -169,8 +169,6 @@ public class PostService implements IPostService {
             throw new MyBadRequestException(ex.toString());
         }   
     }
-    
-    
 
     @Override
     public List<PostForViewerModel> GetListPostForViewer(Long id,int page) {
@@ -196,6 +194,9 @@ public class PostService implements IPostService {
             tmp.setCommentStat(x.getCommentStat());
             tmp.setLikeCount(x.getLikeCount());
             tmp.setShareCount(x.getShareCount());
+            
+            long time = tmp.calcDuration(x.getLastUpdate());
+            tmp.setTime(time);
             
             if(likes.size() > 0){
                 for(PostLike s : likes){
