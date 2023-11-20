@@ -9,7 +9,7 @@ package com.utopia.social_network.utopia_api.common;
  * @author DELL
  */
 public class Pagination {
-    public static int pageSize = 12;
+    public static int pageSize = 6;
     
     public static int getSkip(int page) {
         return ( page - 1 ) * pageSize;

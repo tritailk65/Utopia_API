@@ -197,6 +197,9 @@ public class PostService implements IPostService {
             tmp.setLikeCount(x.getLikeCount());
             tmp.setShareCount(x.getShareCount());
             
+            long time = tmp.calcDuration(x.getLastUpdate());
+            tmp.setTime(time);
+            
             if(likes.size() > 0){
                 for(PostLike s : likes){
                     if(s.getPostId() == x.getId()){
