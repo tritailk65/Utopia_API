@@ -169,8 +169,6 @@ public class PostService implements IPostService {
             throw new MyBadRequestException(ex.toString());
         }   
     }
-    
-    
 
     @Override
     public List<PostForViewerModel> GetListPostForViewer(Long id,int page) {

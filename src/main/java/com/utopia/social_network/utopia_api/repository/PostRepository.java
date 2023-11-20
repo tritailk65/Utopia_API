@@ -32,6 +32,8 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     List<Post> findAllById(Long id);
     
     List<Post> findAllByIsActive(int i);
+    
+    List<Post> findAllByUserId(Long id);
 
     List<Post> findAllByUserIdAndIsActive(Long id, int i);
 
