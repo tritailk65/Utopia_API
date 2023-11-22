@@ -68,8 +68,7 @@ public class PostController {
             String rs = fileName + fileDownloadUri + files.getContentType() + files.getSize();
            // lst.add(fileName);
         //}
-        System.out.println("abcccc");
-        postService.updateSinglePostImage(fileName, id);
+        postService.updateSinglePostImage(fileName, id, files.getContentType());
         return new APIResult(200, "Ok", null, null);
     }
     

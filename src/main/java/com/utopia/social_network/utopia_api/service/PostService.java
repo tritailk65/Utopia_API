@@ -285,7 +285,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void updateSinglePostImage(String path, Long id) {
+    public void updateSinglePostImage(String path, Long id, String type) {
         try{
             Post post = postRepo.findPostById(id);
             if(post == null){
@@ -296,7 +296,7 @@ public class PostService implements IPostService {
             Image img = new Image();
                 img.setName(path);
                 img.setSize(10);
-                img.setType("post");
+                img.setType(type);
                 img.setDateUpdate(dateNow);
                 imgRepo.save(img);
                 post.getPostImages().add(img);

@@ -33,5 +33,5 @@ public interface IPostService{
     
     void updatePostImage( List<String> path, Long id);  
     
-    void updateSinglePostImage( String path, Long id);  
+    void updateSinglePostImage( String path, Long id, String type);  
 }
