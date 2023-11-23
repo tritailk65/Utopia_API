@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.model;
 
 import com.utopia.social_network.utopia_api.entity.Image;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,12 +24,28 @@ public class PostForViewerModel{
         private boolean isOwner = false;
         private Date datePublished;
         private Date lastUpdate;
+        private long time;
         private List<Image> images = new ArrayList<Image>();
         private UserPostForViewerModel User = new UserPostForViewerModel();
+        
+        public long calcDuration (Date lastUpdate) {
+            Date currentTime = new Date();
+            long diff = currentTime.getTime() - lastUpdate.getTime();
+            long hours = diff/(1000 * 60 * 60);
+            return hours;
+        }
         
         public PostForViewerModel() {
         }
 
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+        
         public Long getId() {
             return id;
         }

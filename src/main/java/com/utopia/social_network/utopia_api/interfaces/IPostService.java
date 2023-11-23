@@ -21,6 +21,8 @@ public interface IPostService{
     
     List<PostForViewerModel> GetListPostForViewer(Long id,int page);
     
+    List<PostForViewerModel> GetListPostProfile(String name, int page);
+    
     List<Post> GetAllPostByUser (Long id);
     
     void CreatePost(Post post);
@@ -31,5 +33,5 @@ public interface IPostService{
     
     void updatePostImage( List<String> path, Long id);  
     
-    void updateSinglePostImage( String path, Long id);  
+    void updateSinglePostImage( String path, Long id, String type);  
 }

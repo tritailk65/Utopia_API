@@ -13,18 +13,19 @@ import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
-import com.utopia.social_network.utopia_api.model.CreatePostModel;
 import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.model.UserPostForViewerModel;
 import com.utopia.social_network.utopia_api.repository.ImageRepository;
 import com.utopia.social_network.utopia_api.repository.PostFavoriteRepository;
 import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
+import com.utopia.social_network.utopia_api.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import com.utopia.social_network.utopia_api.entity.User;
 
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,8 @@ public class PostService implements IPostService {
     private PostFavoriteRepository saveRepo;
     @Autowired
     private ImageRepository imgRepo;
+    @Autowired
+    private UserRepository userRepo;
 
     @Override
     public List<Post> GetAllPost(@Nullable Long id) {
@@ -87,6 +90,87 @@ public class PostService implements IPostService {
     }
 
     @Override
+    public List<PostForViewerModel> GetListPostProfile(String name, int page) {
+        List<PostForViewerModel> data = new ArrayList<>();
+        
+        try {
+            User u = userRepo.findUserByUserName(name);
+            
+            List<Post> posts = postRepo.findAllPostProfile(u.getId(),Pagination.pageSize,Pagination.getSkip(page));
+            if(posts.isEmpty()){
+                return data;
+            }
+            
+            List<PostLike> likes = likeRepo.findAllPostLikeByUserId(u.getId(),FilterSort.getAsc("id"));
+            List<PostFavorite> favorites = saveRepo.findAllPostFavoriteByUserId(u.getId(),FilterSort.getAsc("id"));
+            
+            for(Post x : posts){
+                PostForViewerModel tmp = new PostForViewerModel();
+            
+                tmp.setId(x.getId());
+                tmp.setTitle(x.getTitle());
+                tmp.setContent(x.getContent());
+                tmp.setDatePublished(x.getDatePublished());
+                tmp.setLastUpdate(x.getLastUpdate());
+                tmp.setIsHideLike(x.getIsHideLike());
+                tmp.setCommentCount(x.getCommentCount());
+                tmp.setCommentStat(x.getCommentStat());
+                tmp.setLikeCount(x.getLikeCount());
+                tmp.setShareCount(x.getShareCount());
+            
+                if(likes.size() > 0){
+                    for(PostLike s : likes){
+                        if(s.getPostId() == x.getId()){
+                            tmp.setIsLiked(true);
+                            break;
+                        }
+                    }
+                }
+            
+                if(favorites.size() > 0){
+                    for(PostFavorite s : favorites){
+                        if(s.getPostId() == x.getId()){
+                            tmp.setIsSaved(true);
+                            break;
+                        }
+                    }
+                }
+            
+                if(x.getUserId() == u.getId()){
+                    tmp.setIsOwner(true);
+                }
+
+                if(x.getPostImages().size() > 0){
+                    for(Image img : x.getPostImages()){
+                        tmp.getImages().add(img);
+                    }
+                }
+            
+                if(x.getUser() != null){
+                    UserPostForViewerModel tmp_user = new UserPostForViewerModel();
+
+                    tmp_user.setId(x.getUser().getId());
+                    tmp_user.setUserName(x.getUser().getUserName());
+                    tmp_user.setCreateAt(x.getUser().getCreateAt());
+                    tmp_user.setUpdateAt(x.getUser().getUpdateAt());
+                    tmp_user.setWebsite(x.getUser().getWebsite());
+                    tmp_user.setAvatarPath(x.getUser().getAvatarPath());
+
+                    tmp.setUser(tmp_user);
+                }
+                else{
+                    continue;
+                }
+                data.add(tmp);
+            }
+            
+            return data;
+        } catch (Exception ex){
+            throw new MyBadRequestException(ex.toString());
+        }   
+    }
+
+    @Override
     public List<PostForViewerModel> GetListPostForViewer(Long id,int page) {
         List<PostForViewerModel> data = new ArrayList<>();
         List<Post> posts = postRepo.findAllPostForViewer(Pagination.pageSize,Pagination.getSkip(page));
@@ -110,6 +194,9 @@ public class PostService implements IPostService {
             tmp.setCommentStat(x.getCommentStat());
             tmp.setLikeCount(x.getLikeCount());
             tmp.setShareCount(x.getShareCount());
+            
+            long time = tmp.calcDuration(x.getLastUpdate());
+            tmp.setTime(time);
             
             if(likes.size() > 0){
                 for(PostLike s : likes){
@@ -198,7 +285,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void updateSinglePostImage(String path, Long id) {
+    public void updateSinglePostImage(String path, Long id, String type) {
         try{
             Post post = postRepo.findPostById(id);
             if(post == null){
@@ -209,7 +296,7 @@ public class PostService implements IPostService {
             Image img = new Image();
                 img.setName(path);
                 img.setSize(10);
-                img.setType("post");
+                img.setType(type);
                 img.setDateUpdate(dateNow);
                 imgRepo.save(img);
                 post.getPostImages().add(img);

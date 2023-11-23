@@ -4,13 +4,18 @@
  */
 package com.utopia.social_network.utopia_api.service;
 
+import com.utopia.social_network.utopia_api.entity.Following;
+import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IUserService;
+import com.utopia.social_network.utopia_api.model.ProfileInfoModel;
 import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
+import com.utopia.social_network.utopia_api.repository.FollowingRepository;
+import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +35,12 @@ public class UserService implements IUserService {
 
     @Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private PostRepository postRepo;
+    
+    @Autowired
+    private FollowingRepository flRepo;
 
     @Override
     public List<User> getAllUser() {
@@ -128,11 +139,28 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUserByUserName(String name) {
+    public UserProfileModel getUserByUserName(String name) {      
         User rs = userRepo.findUserByUserName(name);
+        UserProfileModel uProfileModel = modelMapper.map(rs, UserProfileModel.class);
+        
+        List<Post> p = postRepo.findAllByUserId(rs.getId());
+        List<Following> listFollower = flRepo.findAllByUserTargetId(rs.getId());
+        List<Following> listFollowing = flRepo.findAllByUserSourceId(rs.getId());
+        
+        uProfileModel.setPostCount(p.size());
+        uProfileModel.setFollowerCount(listFollower.size());
+        uProfileModel.setFollowingCount(listFollowing.size());
+           
+        return uProfileModel;
+    }
+
+    @Override
+    public ProfileInfoModel getProfileInfo(Long id) {
+        ProfileInfoModel rs = new ProfileInfoModel();
+        
+        
         return rs;
     }
     
-    
-    
+   
 }
