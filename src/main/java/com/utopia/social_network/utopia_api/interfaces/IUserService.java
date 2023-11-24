@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.interfaces;
 
 import com.utopia.social_network.utopia_api.entity.User;
+import com.utopia.social_network.utopia_api.model.Email;
 import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
@@ -31,4 +32,8 @@ public interface IUserService {
     User editProfile(UserProfileModel uProfile, Long id);
     
     List<User> getSuggestByUser (Long id);
+    
+    String sendMail(Email email);
+    
+    String resetPassword(String token, String password);
 }
