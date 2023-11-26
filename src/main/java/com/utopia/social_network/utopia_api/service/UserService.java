@@ -143,7 +143,7 @@ public class UserService implements IUserService {
         User rs = userRepo.findUserByUserName(name);
         UserProfileModel uProfileModel = modelMapper.map(rs, UserProfileModel.class);
         
-        List<Post> p = postRepo.findAllByUserId(rs.getId());
+        List<Post> p = postRepo.findAllByUserIdAndIsActive(rs.getId(),1);
         List<Following> listFollower = flRepo.findAllByUserTargetId(rs.getId());
         List<Following> listFollowing = flRepo.findAllByUserSourceId(rs.getId());
         

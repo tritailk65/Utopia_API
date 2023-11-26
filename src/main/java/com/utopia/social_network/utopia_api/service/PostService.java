@@ -307,4 +307,22 @@ public class PostService implements IPostService {
         }
     }
 
+    @Override
+    public boolean EditPost(Long postId, String title, int isHideLike, int commentStat, Long userId) {
+        try{
+            Post post = postRepo.findPostById(postId);
+            if(post == null){
+                throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+            }
+            if(post.getUserId() != userId){
+                throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+            }
+            postRepo.editPost(title, isHideLike, commentStat, postId);
+            return true;
+        }
+        catch(Exception ex){
+            throw new MyBadRequestException("Đã có lỗi xảy ra");
+        }
+    }
+
 }

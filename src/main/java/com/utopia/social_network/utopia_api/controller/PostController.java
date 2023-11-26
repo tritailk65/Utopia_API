@@ -8,6 +8,7 @@ import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
 import com.utopia.social_network.utopia_api.model.CreatePostModel;
+import com.utopia.social_network.utopia_api.model.EditPostModel;
 import com.utopia.social_network.utopia_api.service.FileStorageService;
 import io.swagger.v3.oas.annotations.headers.Header;
 import java.text.ParseException;
@@ -52,6 +53,13 @@ public class PostController {
         Long id = postService.CreatePostV2(post);
         return rs.MessageSuccess("Tạo mới bài viết thành công !", id);
     }
+    
+    @PutMapping
+    private APIResult editPost(@RequestHeader("token") Long user, @RequestBody EditPostModel model) throws ParseException{
+        boolean res = postService.EditPost(model.getPostId(),model.getTitle(),model.getIsHideLike(),model.getCommentStat(),user);
+        return rs.MessageSuccess("Tạo mới bài viết thành công !", null);
+    }
+    
     
     @PostMapping(value = "/UploadImage/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     private APIResult uploadFile(@RequestPart(value = "avatar") MultipartFile files, @PathVariable("id") Long id) {

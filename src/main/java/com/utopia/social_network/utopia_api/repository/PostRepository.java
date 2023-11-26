@@ -28,6 +28,10 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     @Modifying
     @Query(value =  "update post p set p.like_count = ? , p.share_count = ? where p.id = ?", nativeQuery = true)
     int updatePostSetLikeAndShareById(long likeCount,long shareCount , long id);
+    
+    @Modifying
+    @Query(value =  "update post p set p.title = ? , p.is_hide_like = ? , p.comment_stat = ? where p.id = ?", nativeQuery = true)
+    int editPost(String title ,int isHideLike,int commentStat , long id);
 
     List<Post> findAllById(Long id);
     

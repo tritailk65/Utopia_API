@@ -29,6 +29,8 @@ public interface IPostService{
     
     Long CreatePostV2(Post post);
     
+    boolean EditPost(Long postId , String title , int isHideLike , int commentStat , Long userId);
+    
     void DeletePostById(Long id);
     
     void updatePostImage( List<String> path, Long id);  
