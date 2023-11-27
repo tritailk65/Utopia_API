@@ -5,7 +5,9 @@
 package com.utopia.social_network.utopia_api.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,6 +65,9 @@ public class User {
     
     @Column
     private String avatarPath;
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String alert = "" ;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Post> posts;
@@ -172,5 +177,14 @@ public class User {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    public String getAlert() {
+        return alert;
+    }
+
+    public void setAlert(String alert) {
+        this.alert = alert;
+    }
+
     
 }

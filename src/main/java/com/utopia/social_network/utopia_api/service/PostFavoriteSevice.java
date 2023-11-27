@@ -43,6 +43,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     @Autowired
     private NotificationRepository notiRepo;
     @Autowired
+    private SSEService sseService;
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -126,6 +128,15 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
                 noti.setUpdateAt(dateNow);
                 noti.setUserId(post.getUserId());
                 noti.setSourceId(user.get().getId());
+                
+                if(post.isAlert()){
+                    String content = user.get().getUserName()+" just saved your post";
+                    String msgId = String.valueOf(post.getUserId());
+                    boolean online = sseService.checkUserOffline(msgId , content , "noti");  
+                    if(online){
+                        sseService.addMessageForClient(msgId , content , "noti" , true);
+                    }
+                }
 
                 notiRepo.save(noti);
             }

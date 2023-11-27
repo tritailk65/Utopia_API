@@ -37,6 +37,8 @@ public class PostCommentService implements IPostCommentService {
     @Autowired
     private NotificationRepository notiRepository;    
     @Autowired
+    private SSEService sseService;
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -154,7 +156,17 @@ public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
                 noti.setUpdateAt(dateNow);
                 noti.setUserId(post.getUserId());
                 noti.setSourceId(user.getId());
-
+                
+                if(post.isAlert()){
+                    String content = user.getUserName()+" just commented on your post";
+                    String msgId = String.valueOf(post.getUserId());
+                    boolean online = sseService.checkUserOffline(msgId , content , "comment");  
+                    System.out.print(online);
+                    if(online){
+                        sseService.addMessageForClient(msgId , content , "comment" , false);
+                    }
+                }
+                
                 notiRepository.save(noti);
             }
             
@@ -206,6 +218,16 @@ public List<CommentVM> getAllCommentByPostId(Long id,Long user) {
                 noti.setSourceId(user.getId());
 
                 notiRepository.save(noti);
+                
+                if(post.isAlert()){
+                    String content = user.getUserName()+" just replied on your comment";
+                    String msgId = String.valueOf(parentCmt.getUserId());
+                    boolean online = sseService.checkUserOffline(msgId , content , "comment");  
+                    if(online){
+                        sseService.addMessageForClient(msgId , content , "comment" , false);
+                    }
+                }
+                
             }
             
             post.setCommentCount(post.getCommentCount()+1);

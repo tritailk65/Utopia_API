@@ -40,6 +40,7 @@ public class SSEController {
         String id = String.valueOf(System.currentTimeMillis());
         SseEmitter emitter = new SseEmitter();
         ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
+        
         sseMvcExecutor.execute(() -> {
             try {
                 String tmp = token;
@@ -54,6 +55,9 @@ public class SSEController {
                 notificationService.addNotification(httpNotification);
                 
                 emitter.send("SSE Notification connected" +  "\r\n", MediaType.TEXT_EVENT_STREAM);
+                
+                notificationService.sendUnseenNotification(token);
+                
                 while (true) {
                     Thread.sleep(2000);
 
@@ -71,7 +75,7 @@ public class SSEController {
                         if (!list.isEmpty()) {
                             for (String s : list) {
                                 System.out.println(s);
-                                emitter.send(" message: " + s + " | time: " + formattedTime+ "\r\n", MediaType.TEXT_EVENT_STREAM);
+                                emitter.send(s + "\r\n", MediaType.TEXT_EVENT_STREAM);
                                 Thread.sleep(100);
                             }
                             list.clear();
@@ -103,7 +107,7 @@ public class SSEController {
     
     @GetMapping(value = "{token}/sendMessage/{message}")
     private APIResult getListPostForViewer(String token,String message){
-        notificationService.addMessageForClient(token, message);
+        notificationService.addMessageForClient(token,message,"post",true);
         return new APIResult(200,"Ok",null,null);
     }
     

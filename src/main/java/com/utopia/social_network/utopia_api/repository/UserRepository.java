@@ -50,6 +50,10 @@ public interface UserRepository extends JpaRepository<User, Long>{
     void updateUserSetAvatarPathById(String path, Long id);
     
     @Modifying
+    @Query(value =  "update user u set u.alert = ? where u.id = ?", nativeQuery = true)
+    void updateUserSetAlertById(String alert, Long id);
+    
+    @Modifying
     @Query(value =  "update user u "
                     + "set u.full_name = ?, "
                     + "u.website = ?, "

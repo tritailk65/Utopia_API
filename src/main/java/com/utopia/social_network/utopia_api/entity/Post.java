@@ -47,6 +47,9 @@ public class Post{
     private long shareCount = 0;
     
     @Column
+    private boolean alert = true;
+    
+    @Column
     private Date lastUpdate;
     
     @Column
@@ -182,4 +185,14 @@ public class Post{
     public void setCommentCount(long commentCount) {
         this.commentCount = commentCount;
     }
+
+    public boolean isAlert() {
+        return alert;
+    }
+
+    public void setAlert(boolean alert) {
+        this.alert = alert;
+    }
+    
+    
 }

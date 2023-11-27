@@ -41,6 +41,8 @@ public class PostLikeService implements IPostLikeService{
     @Autowired
     private UserRepository userRepo;
     @Autowired
+    private SSEService sseService;
+    @Autowired
     private NotificationRepository notiRepo;
     
     @Autowired
@@ -90,6 +92,17 @@ public class PostLikeService implements IPostLikeService{
                 noti.setSourceId(user.get().getId());
 
                 notiRepo.save(noti);
+                
+                if(post.isAlert()){
+                    String content = user.get().getUserName()+" just liked your post";
+                    String msgId = String.valueOf(post.getUserId());
+                    boolean online = sseService.checkUserOffline(msgId , content , "noti");  
+                    System.out.print(online);
+                    if(online){
+                        sseService.addMessageForClient(msgId , content , "noti" , true);
+                    }
+                }
+                
             }
             
             return model;
