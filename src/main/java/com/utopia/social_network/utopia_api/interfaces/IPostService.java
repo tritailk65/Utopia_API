@@ -23,6 +23,8 @@ public interface IPostService{
     
     List<PostForViewerModel> GetListPostProfile(String name, int page);
     
+    PostForViewerModel GetPostById(Long postId,Long userId);
+    
     List<Post> GetAllPostByUser (Long id);
     
     void CreatePost(Post post);

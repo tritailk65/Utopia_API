@@ -22,6 +22,7 @@ public class PostForViewerModel{
         private boolean isLiked = false;
         private boolean isSaved = false;
         private boolean isOwner = false;
+        private boolean alert = true;
         private Date datePublished;
         private Date lastUpdate;
         private long time;
@@ -146,6 +147,14 @@ public class PostForViewerModel{
 
         public void setCommentCount(long commentCount) {
             this.commentCount = commentCount;
+        }
+
+        public boolean isAlert() {
+            return alert;
+        }
+
+        public void setAlert(boolean alert) {
+            this.alert = alert;
         }
         
     }

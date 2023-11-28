@@ -117,7 +117,8 @@ public class PostService implements IPostService {
                 tmp.setCommentStat(x.getCommentStat());
                 tmp.setLikeCount(x.getLikeCount());
                 tmp.setShareCount(x.getShareCount());
-            
+                tmp.setAlert(x.isAlert());
+                
                 if(likes.size() > 0){
                     for(PostLike s : likes){
                         if(s.getPostId() == x.getId()){
@@ -194,6 +195,7 @@ public class PostService implements IPostService {
             tmp.setCommentStat(x.getCommentStat());
             tmp.setLikeCount(x.getLikeCount());
             tmp.setShareCount(x.getShareCount());
+            tmp.setAlert(x.isAlert());
             
             long time = tmp.calcDuration(x.getLastUpdate());
             tmp.setTime(time);
@@ -319,6 +321,77 @@ public class PostService implements IPostService {
             }
             postRepo.editPost(title, isHideLike, commentStat, postId);
             return true;
+        }
+        catch(Exception ex){
+            throw new MyBadRequestException("Đã có lỗi xảy ra");
+        }
+    }
+
+    @Override
+    public PostForViewerModel GetPostById(Long postId,Long userId) {
+        try{
+            PostForViewerModel model = new PostForViewerModel();
+            User u = userRepo.findUserById(userId);
+            Post post = postRepo.findPostByIdAndIsActive(postId, 1);
+            List<PostLike> likes = likeRepo.findAllPostLikeByUserId(userId,FilterSort.getAsc("id"));
+            List<PostFavorite> favorites = saveRepo.findAllPostFavoriteByUserId(userId,FilterSort.getAsc("id"));
+            if(post == null){
+                throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
+            }
+            model.setId(post.getId());
+            model.setTitle(post.getTitle());
+            model.setContent(post.getContent());
+            model.setDatePublished(post.getDatePublished());
+            model.setLastUpdate(post.getLastUpdate());
+            model.setIsHideLike(post.getIsHideLike());
+            model.setCommentCount(post.getCommentCount());
+            model.setCommentStat(post.getCommentStat());
+            model.setLikeCount(post.getLikeCount());
+            model.setShareCount(post.getShareCount());
+            model.setAlert(post.isAlert());
+            
+                if(likes.size() > 0){
+                    for(PostLike s : likes){
+                        if(s.getPostId() == post.getId()){
+                            model.setIsLiked(true);
+                            break;
+                        }
+                    }
+                }
+            
+                if(favorites.size() > 0){
+                    for(PostFavorite s : favorites){
+                        if(s.getPostId() == post.getId()){
+                            model.setIsSaved(true);
+                            break;
+                        }
+                    }
+                }
+            
+                if(post.getUserId() == u.getId()){
+                    model.setIsOwner(true);
+                }
+
+                if(post.getPostImages().size() > 0){
+                    for(Image img : post.getPostImages()){
+                        model.getImages().add(img);
+                    }
+                }
+            
+                if(post.getUser() != null){
+                    UserPostForViewerModel tmp_user = new UserPostForViewerModel();
+
+                    tmp_user.setId(post.getUser().getId());
+                    tmp_user.setUserName(post.getUser().getUserName());
+                    tmp_user.setCreateAt(post.getUser().getCreateAt());
+                    tmp_user.setUpdateAt(post.getUser().getUpdateAt());
+                    tmp_user.setWebsite(post.getUser().getWebsite());
+                    tmp_user.setAvatarPath(post.getUser().getAvatarPath());
+
+                    model.setUser(tmp_user);
+                }
+                
+            return model;
         }
         catch(Exception ex){
             throw new MyBadRequestException("Đã có lỗi xảy ra");

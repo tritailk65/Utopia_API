@@ -34,7 +34,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     int editPost(String title ,int isHideLike,int commentStat , long id);
 
     List<Post> findAllById(Long id);
-    
+        
     List<Post> findAllByIsActive(int i);
     
     List<Post> findAllByUserId(Long id);
@@ -59,5 +59,5 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     
     Post findPostById(Long id);
 
-
+    Post findPostByIdAndIsActive(Long id,int active);
 }

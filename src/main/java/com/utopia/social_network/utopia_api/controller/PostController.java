@@ -96,8 +96,8 @@ public class PostController {
     }
     
     @GetMapping(value = "/{id}")
-    private APIResult getPostByPost(@PathVariable("id") Long id){
-        return new APIResult(200,"Ok",null,postService.GetAllPost(id));
+    private APIResult getPostByPost(@RequestHeader("token") Long user,@PathVariable("id") Long id){
+        return new APIResult(200,"Ok",null,postService.GetPostById(id,user));
     }
     
     @GetMapping(value = "/User/{id}")
