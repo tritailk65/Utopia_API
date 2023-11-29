@@ -59,7 +59,7 @@ public class SSEController {
                 notificationService.sendUnseenNotification(token);
                 
                 while (true) {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
 
                     HttpNotification notification = notificationService.getHttpNotifications().stream()
                             .filter(s -> s.getId().compareTo(id) == 0)
