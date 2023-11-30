@@ -55,7 +55,6 @@ public class SSEController {
                 notificationService.addNotification(httpNotification);
                 
                 emitter.send("SSE Notification connected" +  "\r\n", MediaType.TEXT_EVENT_STREAM);
-                
                 notificationService.sendUnseenNotification(token);
                 
                 while (true) {
@@ -68,15 +67,15 @@ public class SSEController {
                     
                     if (notification != null) {
                         List<String> list = notification.getMessagers();
+                        
                         LocalDateTime currentTime = LocalDateTime.now();
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                         String formattedTime = currentTime.format(formatter);
 
                         if (!list.isEmpty()) {
                             for (String s : list) {
-                                System.out.println(s);
                                 emitter.send(s + "\r\n", MediaType.TEXT_EVENT_STREAM);
-                                Thread.sleep(100);
+                                //Thread.sleep(100);
                             }
                             list.clear();
                         }
@@ -86,18 +85,15 @@ public class SSEController {
             }catch(Exception e) {
                 emitter.completeWithError(e);  
                 notificationService.removeById(id);
-                System.out.println("close connection 1 ");
             }
         });
 
         emitter.onCompletion(() -> {
-            System.out.println("close connection 2");
             sseMvcExecutor.shutdown();
             notificationService.removeById(id);
         });
         
         emitter.onTimeout(() -> {
-            System.out.println("close connection (timeout) 3");
             sseMvcExecutor.shutdown();
             notificationService.removeById(id);
         });
@@ -116,9 +112,10 @@ public class SSEController {
         return new APIResult(200,"Ok",null,notificationService.getHttpNotifications());
     }
     
-    @DeleteMapping(value = "removeConnection")
-    private APIResult removeConnection(String id){
-        notificationService.removeById(id);
+    @DeleteMapping(value = "removeConnection/{id}")
+    private APIResult removeConnection(Long id){
+        String connectionId = String.valueOf(id);
+        notificationService.removeByToken(connectionId);
         return new APIResult(200,"Ok",null,null);
     }
 }

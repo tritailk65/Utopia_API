@@ -48,7 +48,6 @@ public class SSEService {
 
     public void removeByToken(String token) {
         Iterator<HttpNotification> iterator = httpNotifications.iterator();
-        System.out.println("remove noti");
         while (iterator.hasNext()) {
             HttpNotification notification = iterator.next();
             if (notification.getToken().equals(token)) {
@@ -60,7 +59,6 @@ public class SSEService {
     
     public void removeById(String id) {
         Iterator<HttpNotification> iterator = httpNotifications.iterator();
-        System.out.println("remove notification");
         while (iterator.hasNext()) {
             HttpNotification notification = iterator.next();
             if (notification.getId().equals(id)) {

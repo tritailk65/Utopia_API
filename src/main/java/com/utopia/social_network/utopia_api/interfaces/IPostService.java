@@ -31,7 +31,7 @@ public interface IPostService{
     
     Long CreatePostV2(Post post);
     
-    boolean EditPost(Long postId , String title , int isHideLike , int commentStat , Long userId);
+    boolean EditPost(Long postId , String title , int isHideLike , int commentStat , boolean alert , Long userId);
     
     void DeletePostById(Long id);
     

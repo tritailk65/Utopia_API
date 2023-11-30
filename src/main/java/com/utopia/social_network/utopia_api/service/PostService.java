@@ -310,7 +310,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public boolean EditPost(Long postId, String title, int isHideLike, int commentStat, Long userId) {
+    public boolean EditPost(Long postId, String title, int isHideLike, int commentStat, boolean alert, Long userId) {
         try{
             Post post = postRepo.findPostById(postId);
             if(post == null){
@@ -319,7 +319,7 @@ public class PostService implements IPostService {
             if(post.getUserId() != userId){
                 throw new ResourceNotFoundException("Khong tim thay Post! Kiem tra lai ID");
             }
-            postRepo.editPost(title, isHideLike, commentStat, postId);
+            postRepo.editPost(title, isHideLike, commentStat,alert, postId);
             return true;
         }
         catch(Exception ex){

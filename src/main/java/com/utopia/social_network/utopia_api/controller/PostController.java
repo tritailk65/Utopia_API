@@ -56,7 +56,7 @@ public class PostController {
     
     @PutMapping
     private APIResult editPost(@RequestHeader("token") Long user, @RequestBody EditPostModel model) throws ParseException{
-        boolean res = postService.EditPost(model.getPostId(),model.getTitle(),model.getIsHideLike(),model.getCommentStat(),user);
+        boolean res = postService.EditPost(model.getPostId(),model.getTitle(),model.getIsHideLike(),model.getCommentStat(),model.isAlert(),user);
         return rs.MessageSuccess("Tạo mới bài viết thành công !", null);
     }
     

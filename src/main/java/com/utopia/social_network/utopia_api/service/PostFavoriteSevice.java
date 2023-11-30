@@ -9,12 +9,14 @@ import com.utopia.social_network.utopia_api.entity.Image;
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;
 import com.utopia.social_network.utopia_api.entity.PostFavorite;
+import com.utopia.social_network.utopia_api.entity.PostLike;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IPostFavoriteSevice;
 import com.utopia.social_network.utopia_api.model.PostForViewerModel;
 import com.utopia.social_network.utopia_api.repository.NotificationRepository;
 import com.utopia.social_network.utopia_api.repository.PostFavoriteRepository;
+import com.utopia.social_network.utopia_api.repository.PostLikeRepository;
 import com.utopia.social_network.utopia_api.repository.PostRepository;
 import com.utopia.social_network.utopia_api.repository.UserRepository;
 import com.utopia.social_network.utopia_api.viewModel.SavePostFavoriteVM;
@@ -39,6 +41,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     @Autowired
     private PostRepository postRepo;
     @Autowired
+    private PostLikeRepository likeRepo;
+    @Autowired
     private UserRepository userRepo;
     @Autowired
     private NotificationRepository notiRepo;
@@ -50,6 +54,8 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
     @Override
     public List<PostForViewerModel> getAllPostFavoriteByUserId(Long userId) {
         List<PostForViewerModel> list = new ArrayList<PostForViewerModel>();
+        
+        List<PostLike> likes = likeRepo.findAllPostLikeByUserId(userId,FilterSort.getAsc("id"));
         List<PostFavorite> favorites = repository.findAllPostFavoriteByUserId(userId,FilterSort.getDesc("id"));
         for(PostFavorite x : favorites){   
             if(x.getPost().getIsActive() == 1){
@@ -65,12 +71,22 @@ public class PostFavoriteSevice implements IPostFavoriteSevice{
                 tmp.setCommentCount(x.getPost().getCommentCount());
                 tmp.setShareCount(x.getPost().getShareCount());
                 tmp.setTitle(x.getPost().getTitle());
+                tmp.setIsSaved(true);
                 
                 if(x.getPost().getPostImages().size() > 0){
                     for(Image img : x.getPost().getPostImages()){
                         tmp.getImages().add(img);
                     }
                 }
+                
+                if(likes.size() > 0){
+                    for(PostLike s : likes){
+                        if(s.getPostId() == x.getPost().getId()){
+                            tmp.setIsLiked(true);
+                            break;
+                        }
+                    }
+                }       
                 
                 tmp.getUser().setId(x.getPost().getUser().getId());
                 tmp.getUser().setUserName(x.getPost().getUser().getUserName());

@@ -13,6 +13,7 @@ public class EditPostModel {
     private String title = "";
     private int isHideLike = 0;
     private int commentStat = 0;
+    private boolean alert = true;
 
     public Long getPostId() {
         return postId;
@@ -44,6 +45,14 @@ public class EditPostModel {
 
     public void setCommentStat(int commentStat) {
         this.commentStat = commentStat;
+    }
+
+    public boolean isAlert() {
+        return alert;
+    }
+
+    public void setAlert(boolean alert) {
+        this.alert = alert;
     }
 
     
