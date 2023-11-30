@@ -7,12 +7,14 @@ package com.utopia.social_network.utopia_api.controller;
 import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IUserService;
+import com.utopia.social_network.utopia_api.model.Email;
 import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
 import com.utopia.social_network.utopia_api.service.FileStorageService;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,8 @@ public class UserController {
     @GetMapping(value = "/Avatar/{name}")
     private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
         String fileName = name;
-        
-        if (fileName == null){
+
+        if (fileName == null) {
             throw new ResourceNotFoundException("Không tìm thấy hình ảnh");
         }
 
@@ -100,7 +102,7 @@ public class UserController {
     private APIResult getUserById(@PathVariable("id") Long id) {
         return new APIResult(200, "Ok", null, userService.getUserById(id));
     }
-    
+
     @GetMapping(value = {"/GetByName/{name}"})
     private APIResult getUserByName(@PathVariable("name") String name) {
         return new APIResult(200, "Ok", null, userService.getUserByUserName(name));
@@ -108,11 +110,11 @@ public class UserController {
 
     @PostMapping(value = {"/Login"})
     private APIResult userLogin(@RequestBody UserLoginModel uLogin) {
-        return new APIResult(200, "Đăng nhập thành công !", null, userService.login(uLogin)); 
+        return new APIResult(200, "Đăng nhập thành công !", null, userService.login(uLogin));
     }
 
     @PostMapping(value = "/SignUp")
-    private APIResult userRegister(@RequestBody UserRegisterModel u){
+    private APIResult userRegister(@RequestBody UserRegisterModel u) {
         return new APIResult(200, "Ok", null, userService.signUp(u));
     }
 
@@ -120,10 +122,22 @@ public class UserController {
     private APIResult editProfile(@RequestBody UserProfileModel uProfile, @PathVariable("id") Long id) {
         return new APIResult(200, "Ok", null, userService.editProfile(uProfile, id));
     }
-    
+
     @GetMapping(value = {"/SuggestFollow"})
-    private APIResult suggestFollow(@RequestHeader Long token){
+    private APIResult suggestFollow(@RequestHeader Long token) {
         return new APIResult(200, "Ok", null, userService.getSuggestByUser(token));
     }
 
+    @PostMapping(value = {"/sendmail"})
+    public APIResult sendMail(@RequestBody Email email) {
+        return new APIResult(200, "Ok", null, userService.sendMail(email));
+    }
+    
+    @PostMapping(value = "/ResetPassword")
+    public APIResult resetPassword(@RequestBody Map<String, String> requestParams) {
+        String token = requestParams.get("token");
+        String password = requestParams.get("password");
+        return new APIResult(200, "OK", null,userService.resetPassword(token, password));
+    }
+  
 }
