@@ -4,22 +4,35 @@
  */
 package com.utopia.social_network.utopia_api.model;
 
+import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 /**
  *
  * @author trita
  */
 public class UserRegisterModel {
 
+    @NotBlank
+    @Size(min = 3, max = 20)
     public String userName;
+    
+    @NotBlank
+    @Size(min = 6, max = 40)
     public String password;
-    public String phone;
+    
+    @NotBlank
+    @Size(max = 50)
     public String email;
+    
     public String fullName;
+    
+    private Set<String> role;
 
-    public UserRegisterModel(String userName, String password, String phone, String email, String fullName) {
+    public UserRegisterModel(String userName, String password, String email, String fullName) {
         this.userName = userName;
         this.password = password;
-        this.phone = phone;
         this.email = email;
         this.fullName = fullName;
     }
@@ -40,14 +53,6 @@ public class UserRegisterModel {
         this.password = password;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -63,6 +68,16 @@ public class UserRegisterModel {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+    public Set<String> getRole() {
+        return role;
+    }
+
+    public void setRole(Set<String> role) {
+        this.role = role;
+    }
+    
+    
     
     
 }

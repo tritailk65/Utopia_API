@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.utopia.social_network.utopia_api.service;
+package com.utopia.social_network.utopia_api.services;
 
 import com.utopia.social_network.utopia_api.entity.Following;
 import com.utopia.social_network.utopia_api.entity.Post;
@@ -32,10 +32,8 @@ import java.util.UUID;
 import javax.mail.internet.MimeMessage;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Service;
 
 /**
@@ -170,15 +168,15 @@ public class UserService implements IUserService {
 
     @Override
     public User login(UserLoginModel uLogin) {
-        User u = new User();
+        User u = new User(null,null,null);
 
-        if (uLogin.getPhone() != null) {
-            u = userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
-        } else if (uLogin.getUserName() != null) {
-            u = userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
-        } else if (uLogin.getEmail() != null) {
-            u = userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
-        }
+//        if (uLogin.getPhone() != null) {
+//            u = userRepo.findUserByPhoneAndPassword(uLogin.getPhone(), uLogin.getPassword());
+//        } else if (uLogin.getUserName() != null) {
+//            u = userRepo.findUserByUserNameAndPassword(uLogin.getUserName(), uLogin.getPassword());
+//        } else if (uLogin.getEmail() != null) {
+//            u = userRepo.findUserByEmailAndPassword(uLogin.getEmail(), uLogin.getPassword());
+//        }
 
         if (u != null) {
             return u;
@@ -197,9 +195,10 @@ public class UserService implements IUserService {
         } else {
             if ((userRegisterModel.getEmail() != null && userRegisterModel.getEmail() != "") ? (userRepo.findUserByEmail(userRegisterModel.getEmail()) != null) : false) {
                 throw new MyBadRequestException("Email đã tồn tại");
-            } else if ((userRegisterModel.getPhone() != null && userRegisterModel.getPhone() != "") ? (userRepo.findUserByPhone(userRegisterModel.getPhone()) != null) : false) {
-                throw new MyBadRequestException("Số điện thoại đã tồn tại");
-            }
+            } 
+//            else if ((userRegisterModel.getPhone() != null && userRegisterModel.getPhone() != "") ? (userRepo.findUserByPhone(userRegisterModel.getPhone()) != null) : false) {
+//                throw new MyBadRequestException("Số điện thoại đã tồn tại");
+//            }
         }
 
         //Update time

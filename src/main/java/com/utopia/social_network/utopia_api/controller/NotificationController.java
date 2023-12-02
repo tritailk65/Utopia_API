@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author trita
  */
-
 @CrossOrigin
 @RestController
 @RequestMapping("/api/Notification")

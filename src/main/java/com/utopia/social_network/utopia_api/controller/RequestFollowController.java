@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author trita
  */
-@CrossOrigin
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/RequestFollow")
 public class RequestFollowController {

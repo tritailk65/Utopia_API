@@ -5,6 +5,7 @@
 package com.utopia.social_network.utopia_api.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -26,27 +27,61 @@ public class UserProfileModel {
     private int postCount;
     private int followerCount;
     private int followingCount;
-
-    public UserProfileModel(Long id, String userName, String phone, String email, String fullName, String gender, Date createAt, Date updateAt, String bio, String website, String avatarPath, int postCount, int followerCount, int followingCount) {
-        this.id = id;
-        this.userName = userName;
-        this.phone = phone;
-        this.email = email;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.bio = bio;
-        this.website = website;
-        this.avatarPath = avatarPath;
-        this.postCount = postCount;
-        this.followerCount = followerCount;
-        this.followingCount = followingCount;
-    }
+    private List<String> roles;
+    private String accessToken;
+    private String refreshToken;
+    private String tokenType;
 
     public UserProfileModel() {
     }
 
+    public UserProfileModel(Long id, String userName, String email, List<String> roles, String accessToken, String refreshToken, String tokenType) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.roles = roles;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.tokenType = tokenType;
+    }
+
+    
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+    
+    
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+    
+   
     public Long getId() {
         return id;
     }

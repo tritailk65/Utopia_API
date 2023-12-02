@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.utopia.social_network.utopia_api.service;
+package com.utopia.social_network.utopia_api.services;
 
 import com.utopia.social_network.utopia_api.entity.Following;
 import com.utopia.social_network.utopia_api.exception.MyBadRequestException;

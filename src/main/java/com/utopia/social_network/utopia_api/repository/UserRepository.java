@@ -6,6 +6,7 @@ package com.utopia.social_network.utopia_api.repository;
 
 import com.utopia.social_network.utopia_api.entity.User;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long>{ 
+    
+    Optional<User> findByUserName(String username);
 
     User findUserById(Long id);
     
@@ -65,4 +68,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
     User findUserByPhone(String phone);
     
     List<User> findAllById(Long id);
+    
+    Boolean existsByUserName(String username);
+
+    Boolean existsByEmail(String email);
 }

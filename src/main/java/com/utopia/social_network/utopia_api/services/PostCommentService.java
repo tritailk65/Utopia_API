@@ -1,4 +1,4 @@
-package com.utopia.social_network.utopia_api.service;
+package com.utopia.social_network.utopia_api.services;
 
 import com.utopia.social_network.utopia_api.entity.Notification;
 import com.utopia.social_network.utopia_api.entity.Post;

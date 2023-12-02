@@ -4,14 +4,13 @@
  */
 package com.utopia.social_network.utopia_api.controller;
 
-import com.utopia.social_network.utopia_api.entity.User;
 import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.interfaces.IUserService;
 import com.utopia.social_network.utopia_api.model.Email;
 import com.utopia.social_network.utopia_api.model.UserLoginModel;
 import com.utopia.social_network.utopia_api.model.UserProfileModel;
 import com.utopia.social_network.utopia_api.model.UserRegisterModel;
-import com.utopia.social_network.utopia_api.service.FileStorageService;
+import com.utopia.social_network.utopia_api.services.FileStorageService;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import java.io.IOException;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,7 +47,7 @@ public class UserController {
     private APIResult rs;
 
     @PostMapping(value = "/UploadAvatar/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    private APIResult uploadFile(@RequestPart(value = "avatar") MultipartFile file, @PathVariable("id") Long id) {
+    public APIResult uploadFile(@RequestPart(value = "avatar") MultipartFile file, @PathVariable("id") Long id) {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/Avatar/{name}")
-    private ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
+    public ResponseEntity<Resource> getAvatar(@PathVariable("name") String name, HttpServletRequest request) {
         String fileName = name;
 
         if (fileName == null) {
@@ -94,7 +94,7 @@ public class UserController {
     }
 
     @GetMapping
-    private APIResult getAllUser() {
+    public APIResult getAllUser() {
         return new APIResult(200, "Ok", null, userService.getAllUser());
     }
 

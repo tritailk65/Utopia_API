@@ -8,7 +8,7 @@ import com.utopia.social_network.utopia_api.exception.ResourceNotFoundException;
 import com.utopia.social_network.utopia_api.utils.APIResult;
 import com.utopia.social_network.utopia_api.interfaces.IPostService;
 import com.utopia.social_network.utopia_api.model.CreatePostModel;
-import com.utopia.social_network.utopia_api.service.FileStorageService;
+import com.utopia.social_network.utopia_api.services.FileStorageService;
 import io.swagger.v3.oas.annotations.headers.Header;
 import java.text.ParseException;
 import java.util.ArrayList;

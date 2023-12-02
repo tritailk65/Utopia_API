@@ -1,4 +1,4 @@
-package com.utopia.social_network.utopia_api.service;
+package com.utopia.social_network.utopia_api.services;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

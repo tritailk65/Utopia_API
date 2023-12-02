@@ -14,12 +14,12 @@ public class ErrorDetails {
     public int Status;
     public String Exception;
     public String Message;
-    public Object Data;
+    public String Path;
 
-    public ErrorDetails(int Status, String Exception, String Message, Object Data) {
+    public ErrorDetails(int Status, String Exception, String Message, String Path) {
         this.Status = Status;
         this.Exception = Exception;
         this.Message = Message;
-        this.Data = Data;
+        this.Path = Path;
     }
 }
